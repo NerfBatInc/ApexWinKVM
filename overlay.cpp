@@ -206,8 +206,7 @@ void Overlay::RenderMenu()
 				//}
 
 
-			static int item_current_2 = 0;
-			ImGui::Combo("combo 2 (one-liner)", &item_current_2, "aaaa\0bbbb\0cccc\0dddd\0eeee\0\0");
+			
 			
 
 			ImGui::Text(XorStr("Red Value Glow:"));
