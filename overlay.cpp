@@ -92,6 +92,8 @@ void CleanupDeviceD3D();
 void CreateRenderTarget();
 void CleanupRenderTarget();
 
+
+
 void Overlay::RenderMenu()
 {
 	static bool aim_enable = false;
@@ -179,11 +181,39 @@ void Overlay::RenderMenu()
 			ImGui::Text(XorStr("ESP options:"));
 			//ImGui::Checkbox(XorStr("Box"), &v.box);
 
-			//glow type code goes here when i figure out it.
+			//glow type, IT WORKS
 			//  https://casualhacks.net/apexstuff/highlight-functions.html  types im messing with
 
+			/*static const char* items[] = {"Type 1", "Type 10", "Type 12", "Type 171"};
+			static const char* item_current = "Type 1";
+
+			if (ImGui::BeginCombo("Glow Type", item_current)) // The second parameter is the label previewed before opening the combo.
+			{
+				for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+				{
+					bool is_selected = (item_current == items[n]);
+					if (ImGui::Selectable(items[n], is_selected))
+						item_current = items[n];
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+				}
+				ImGui::EndCombo();
+			}
+			if (item_current == "Type 1")
+				glowtype = 1;
+			if (item_current == "Type 10")
+				glowtype = 10;
+			if (item_current == "Type 12")
+				glowtype = 12;
+			if (item_current == "Type 171")
+				glowtype = 171;
+				*/
+
+			ImGui::Text(XorStr("Glow Type"));
+			ImGui::SliderInt(XorStr("GlowType"), &glowtype, 1, 175);
 			
-			
+
+
 
 			ImGui::Text(XorStr("Red Value Glow:"));
 			ImGui::SliderFloat(XorStr("Red"), &glowr, 0.0f, 250.0f, "%.2f");
@@ -212,7 +242,7 @@ void Overlay::RenderInfo()
 
 	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(450, 25));
+	ImGui::SetNextWindowSize(ImVec2(470, 25));
 	ImGui::Begin(XorStr("##info"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
 	DrawLine(ImVec2(1, 5), ImVec2(400, 5), RED, 2);
 	ImGui::TextColored(RED, "%d", spectators);
