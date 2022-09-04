@@ -180,6 +180,7 @@ void Overlay::RenderMenu()
 			//ImGui::Checkbox(XorStr("Box"), &v.box);
 
 			//glow type code goes here when i figure out it.
+			//  https://casualhacks.net/apexstuff/highlight-functions.html  types im messing with
 
 			
 			
