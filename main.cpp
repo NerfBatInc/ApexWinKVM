@@ -281,7 +281,7 @@ int main(int argc, char** argv)
 			k_f6 = 0;
 		}
 
-
+	
 
 		if (IsKeyDown(VK_F9) && k_f100 == 1)
 		{

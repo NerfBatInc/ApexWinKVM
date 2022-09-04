@@ -184,7 +184,7 @@ void Overlay::RenderMenu()
 			//glow type, IT WORKS
 			//  https://casualhacks.net/apexstuff/highlight-functions.html  types im messing with
 
-			/*static const char* items[] = {"Type 1", "Type 10", "Type 12", "Type 171"};
+			static const char* items[] = {"Type 1", "BloodHound", "Type 4", "Type 5", "Type 101", "Type 104", "Type 117" };
 			static const char* item_current = "Type 1";
 
 			if (ImGui::BeginCombo("Glow Type", item_current)) // The second parameter is the label previewed before opening the combo.
@@ -199,18 +199,25 @@ void Overlay::RenderMenu()
 				}
 				ImGui::EndCombo();
 			}
-			if (item_current == "Type 1")
+			if (item_current == "Default for RGB Colors")
 				glowtype = 1;
-			if (item_current == "Type 10")
-				glowtype = 10;
-			if (item_current == "Type 12")
-				glowtype = 12;
-			if (item_current == "Type 171")
-				glowtype = 171;
-				*/
+			if (item_current == "BloodHound")
+				glowtype = 7;
+			if (item_current == "Type 4")
+				glowtype = 4;
+			if (item_current == "Type 5")
+				glowtype = 5;
+			if (item_current == "Type 101")
+				glowtype = 101;
+			if (item_current == "Type 103")
+				glowtype = 103;
+			if (item_current == "Type 104")
+				glowtype = 104;
+			if (item_current == "Type 117")
+				glowtype = 117;
+				
 
-			ImGui::Text(XorStr("Glow Type"));
-			ImGui::SliderInt(XorStr("GlowType"), &glowtype, 1, 175);
+
 			
 
 
