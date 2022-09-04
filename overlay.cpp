@@ -179,32 +179,7 @@ void Overlay::RenderMenu()
 			ImGui::Text(XorStr("ESP options:"));
 			//ImGui::Checkbox(XorStr("Box"), &v.box);
 
-			//const char* items[] = { "2", "10", "12", "13", "101", "103", "114", "115", "117", "133", "137", "171"};
-
-
-			//static const char* glowtype = items[2];            // Here our selection is a single pointer stored outside the object.
-
-			
-				// Using the generic BeginListBox() API, you have full control over how to display the combo contents.
-				// (your selection data could be an index, a pointer to the object, an id for the object, a flag intrusively
-				// stored in the object itself, etc.)
-				//const char* items[] = { "2", "10", "12", "13", "101", "103", "114", "115", "117", "133", "137", "171" };
-				//extern int glowtype; // Here we store our selection data as an index.
-				//if (ImGui::BeginListBox("Glow Type"))
-				//{
-				//	for (int n = 0; n < IM_ARRAYSIZE(items); n++)
-				//	{
-				//		const bool is_selected = (glowtype == n);
-				//		if (ImGui::Selectable(items[n], is_selected))
-				//			glowtype = n;
-				//
-				//		// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-				//		if (is_selected)
-				//			ImGui::SetItemDefaultFocus();
-				//	}
-				//	ImGui::EndListBox();
-				//}
-
+			//glow type code goes here when i figure out it.
 
 			
 			
