@@ -29,6 +29,11 @@ extern float glowg;
 extern float glowb;
 extern int glowtype;
 extern int glowtype2;
+float glowcolor[3] = { 000.0f, 000.0f, 000.0f };
+
+const char* items[] = { "Default for RGB Colors", "BloodHound" };
+const char* item_current = "Default for RGB Colors";
+
 
 int width;
 int height;
@@ -130,7 +135,7 @@ void Overlay::RenderMenu()
 	}
 	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(450, 260), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImVec2(450, 860), ImGuiCond_Once);
 	ImGui::Begin(XorStr("##title"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
 	if (ImGui::BeginTabBar(XorStr("Tab")))
 	{
@@ -161,13 +166,11 @@ void Overlay::RenderMenu()
 			}
 
 			ImGui::Checkbox(XorStr("Glow items"), &item_glow);
+			ImGui::SameLine();
 			ImGui::Checkbox(XorStr("Glow players"), &player_glow);
 			ImGui::Checkbox(XorStr("Thirdperson"), &thirdperson);
 			ImGui::Checkbox(XorStr("Charge rifle hack"), &chargerifle);
-			ImGui::EndTabItem();
-		}
-		if (ImGui::BeginTabItem(XorStr("Config")))
-		{
+			ImGui::Checkbox(XorStr("Firing Range Toggle"), &firing_range);
 			ImGui::Text(XorStr("Max distance:"));
 			ImGui::SliderFloat(XorStr("##1"), &max_dist, 100.0f * 40, 800.0f * 40, "%.2f");
 			ImGui::SameLine();
@@ -179,80 +182,24 @@ void Overlay::RenderMenu()
 			ImGui::Text(XorStr("Max FOV:"));
 			ImGui::SliderFloat(XorStr("##3"), &max_fov, 5.0f, 250.0f, "%.2f");
 
-			ImGui::Text(XorStr("Aim at (bone id):"));
+			ImGui::Text(XorStr("Aim at 0=Head, 1=Neck, 2=Chest, 3=Stomach"));
 			ImGui::SliderInt(XorStr("##4"), &bone, 0, 175);
 
-			if (ImGui::Button("Save Config"))
-			{
-				ofstream config("Config.txt");
-				
-				if (config.is_open())
-				{
-					
+			
 
-					config << std::boolalpha << firing_range << "\n";
-					config << aim << "\n";
-					config << std::boolalpha << esp << "\n";
-					config << std::boolalpha << item_glow << "\n";
-					config << std::boolalpha << player_glow << "\n";
-					config << std::boolalpha << aim_no_recoil << "\n";
-					config << std::fixed << max_dist << "f" << "\n";
-					config << std::fixed << smooth << "f" << "\n";
-					config << std::fixed << max_fov << "f" << "\n";
-					config << bone << "\n";
-					config << std::fixed << glowr << "f" << "\n";
-					config << std::fixed << glowg << "f" << "\n";
-					config << std::fixed << glowb << "f" << "\n";
-					config << glowtype << "\n";
-					config << glowtype2;
 
-					config.close();
-				}
-			}
+			ImGui::Checkbox(XorStr("Distance"), &v.distance);
 			ImGui::SameLine();
-			if (ImGui::Button("Load Config"))
-			{
-				
-				ifstream config("Config.txt");
-
-				if (config.is_open())
-				{
-
-
-					config >> std::boolalpha >> firing_range;
-					config >> aim;
-					config >> std::boolalpha >> esp;
-					config >> std::boolalpha >> item_glow;
-					config >> std::boolalpha >> player_glow;
-					config >> std::boolalpha >> aim_no_recoil;
-					config >> std::fixed >> max_dist;
-					config >> std::fixed >> smooth;
-					config >> std::fixed >> max_fov;
-					config >> bone;
-					config >> std::fixed >> glowr;
-					config >> std::fixed >> glowg;
-					config >> std::fixed >> glowb;
-					config >> glowtype;
-					config >> glowtype2;
-
-					config.close();
-				}
-			}
-
-
-			ImGui::Checkbox(XorStr("Firing Range Toggle"), &firing_range);
-			ImGui::EndTabItem();
-		}
-		if (ImGui::BeginTabItem(XorStr("Visuals")))
-		{
+			ImGui::Checkbox(XorStr("Health bar"), &v.healthbar);
+			ImGui::SameLine();
+			ImGui::Checkbox(XorStr("Shield bar"), &v.shieldbar);
 			ImGui::Text(XorStr("ESP options:"));
 			//ImGui::Checkbox(XorStr("Box"), &v.box);
 
 			//glow type, IT WORKS
 			//  https://casualhacks.net/apexstuff/highlight-functions.html  types im messing with
 
-			static const char* items[] = {"Default for RGB Colors", "BloodHound" };
-			static const char* item_current = "Default for RGB Colors";
+
 
 			if (ImGui::BeginCombo("Glow Type", item_current)) // The second parameter is the label previewed before opening the combo.
 			{
@@ -275,19 +222,96 @@ void Overlay::RenderMenu()
 
 
 
-			ImGui::Text(XorStr("Red Value Glow:"));
-			ImGui::SliderFloat(XorStr("Red"), &glowr, 0.0f, 250.0f, "%.2f");
+			/*ImGui::Text(XorStr("Red Value Glow:"));
+			ImGui::SliderFloat(XorStr("Red"), &glowcolor[0], 0.0f, 250.0f, "%.2f");
 			ImGui::Text(XorStr("Green Value Glow:"));
-			ImGui::SliderFloat(XorStr("Green"), &glowg, 0.0f, 250.0f, "%.2f");
+			ImGui::SliderFloat(XorStr("Green"), &glowcolor[1], 0.0f, 250.0f, "%.2f");
 			ImGui::Text(XorStr("Blue Value Glow:"));
-			ImGui::SliderFloat(XorStr("Blue"), &glowb, 0.0f, 250.0f, "%.2f");
+			ImGui::SliderFloat(XorStr("Blue"), &glowcolor[2], 0.0f, 250.0f, "%.2f");
+			*/
+			
 			//ImGui::Checkbox(XorStr("Name"), &v.name);
 			//ImGui::Checkbox(XorStr("Line"), &v.line);
-			ImGui::Checkbox(XorStr("Distance"), &v.distance);
-			ImGui::Checkbox(XorStr("Health bar"), &v.healthbar);
-			ImGui::Checkbox(XorStr("Shield bar"), &v.shieldbar);
+
+			
+
+			//Testing rando stuff
+
+
+
+			
+
+			ImGui::ColorEdit3("Glow Color Picker", glowcolor);
+			
+			glowr = glowcolor[0] * 250;
+			glowg = glowcolor[1] * 250;
+			glowb = glowcolor[2] * 250;
+			
+			
+
+
+			if (ImGui::Button("Save Config"))
+			{
+				ofstream config("Config.txt");
+
+				if (config.is_open())
+				{
+
+
+					config << std::boolalpha << firing_range << "\n";
+					config << aim << "\n";
+					config << std::boolalpha << esp << "\n";
+					config << std::boolalpha << item_glow << "\n";
+					config << std::boolalpha << player_glow << "\n";
+					config << std::boolalpha << aim_no_recoil << "\n";
+					config << max_dist << "\n";
+					config << smooth << "\n";
+					config << max_fov << "\n";
+					config << bone << "\n";
+					config << glowr << "\n";
+					config << glowg << "\n";
+					config << glowb << "\n";
+					config << glowtype << "\n";
+					config << glowtype2 << "\n";
+					config << item_current;
+
+					config.close();
+				}
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Load Config"))
+			{
+
+				ifstream config("Config.txt");
+
+				if (config.is_open())
+				{
+
+
+					config >> std::boolalpha >> firing_range;
+					config >> aim;
+					config >> std::boolalpha >> esp;
+					config >> std::boolalpha >> item_glow;
+					config >> std::boolalpha >> player_glow;
+					config >> std::boolalpha >> aim_no_recoil;
+					config >> max_dist;
+					config >> smooth;
+					config >> max_fov;
+					config >> bone;
+					config >> glowr;
+					config >> glowg;
+					config >> glowb;
+					config >> glowtype;
+					config >> glowtype2;
+					//config >> item_current; // no idea how to imput a string of words 
+					
+
+					config.close();
+				}
+			}
 			ImGui::EndTabItem();
 		}
+		
 		ImGui::EndTabBar();
 	}
 	ImGui::Text(XorStr("Overlay FPS: %.3f ms/frame (%.1f FPS)"), 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);

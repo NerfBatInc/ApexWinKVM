@@ -353,7 +353,7 @@ int main(int argc, char** argv)
 	ready = false;
 	ov1.Clear();
 	if(!use_nvidia)
-		system(XorStr("taskkill /F /T /IM MonkeyCure.exe")); //custom overlay process name
+		system(XorStr("taskkill /F /T /IM Nvspcaps64.exe")); //custom overlay process name
 	return 0;
 }
 
