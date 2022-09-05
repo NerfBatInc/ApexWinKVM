@@ -1,4 +1,6 @@
 #include "overlay.h"
+#include "Config.cpp"
+#include "Config.h"
 
 extern bool firing_range;
 extern int aim;
@@ -92,7 +94,54 @@ void CleanupDeviceD3D();
 void CreateRenderTarget();
 void CleanupRenderTarget();
 
+//Save and Load void
 
+
+void configLoad(std::string con)
+{
+	con.append(".cfg");
+
+	ConfigFile cfg = ConfigFile::ConfigFile(con);
+
+	firing_range = cfg.GetBool("Glow Type", false);
+	aim = cfg.GetInt("Glow Type", false);
+	esp = cfg.GetBool("Glow Type", false);
+	item_glow = cfg.GetBool("Glow Type", false);
+	player_glow = cfg.GetBool("Glow Type", false);
+	aim_no_recoil = cfg.GetBool("Glow Type", false);
+	max_dist = cfg.GetFloat("Glow Type", false);
+	smooth = cfg.GetFloat("Glow Type", false);
+	max_fov = cfg.GetFloat("Glow Type", false);
+	bone = cfg.GetInt("Glow Type", false);
+	glowr = cfg.GetFloat("Glow Type", false);
+	glowg = cfg.GetFloat("Glow Type", false);
+	glowb = cfg.GetFloat("Glow Type", false);
+	glowtype = cfg.GetInt("Glow Type", false);
+	glowtype2 = cfg.GetInt("Glow Type", false);
+}
+
+void configSave(std::string con)
+{
+	con.append(".cfg");
+
+	ConfigFile cfg(con);
+
+	cfg.SetBool("Glow Type", firing_range);
+	cfg.SetInt("Glow Type", aim);
+	cfg.SetBool("Glow Type", esp);
+	cfg.SetBool("Glow Type", item_glow);
+	cfg.SetBool("Glow Type", player_glow);
+	cfg.SetBool("Glow Type", aim_no_recoil);
+	cfg.SetFloat("Glow Type", max_dist);
+	cfg.SetFloat("Glow Type", smooth);
+	cfg.SetFloat("Glow Type", max_fov);
+	cfg.SetInt("Glow Type", bone);
+	cfg.SetFloat("Glow Type", glowr);
+	cfg.SetFloat("Glow Type", glowg);
+	cfg.SetFloat("Glow Type", glowb);
+	cfg.SetInt("Glow Type", glowtype);
+	cfg.SetInt("Glow Type", glowtype2);
+}
 
 void Overlay::RenderMenu()
 {
@@ -172,6 +221,11 @@ void Overlay::RenderMenu()
 			ImGui::Text(XorStr("Aim at (bone id):"));
 			ImGui::SliderInt(XorStr("##4"), &bone, 0, 175);
 
+			if (ImGui::Button("Save config"))
+				configSave(configName);
+			if (ImGui::Button("Load config"))
+				configLoad(configName);
+
 
 			ImGui::Checkbox(XorStr("Firing Range Toggle"), &firing_range);
 			ImGui::EndTabItem();
@@ -184,7 +238,7 @@ void Overlay::RenderMenu()
 			//glow type, IT WORKS
 			//  https://casualhacks.net/apexstuff/highlight-functions.html  types im messing with
 
-			/*static const char* items[] = {"Default for RGB Colors", "BloodHound", "Type 4", "Type 5", "Type 101", "Type 104", "Type 117"};
+			static const char* items[] = {"Default for RGB Colors", "BloodHound" };
 			static const char* item_current = "Default for RGB Colors";
 
 			if (ImGui::BeginCombo("Glow Type", item_current)) // The second parameter is the label previewed before opening the combo.
@@ -203,22 +257,8 @@ void Overlay::RenderMenu()
 				glowtype = 1;
 			if (item_current == "BloodHound")
 				glowtype = 7;
-			if (item_current == "Type 4")
-				glowtype = 4;
-			if (item_current == "Type 5")
-				glowtype = 5;
-			if (item_current == "Type 101")
-				glowtype = 101;
-			if (item_current == "Type 103")
-				glowtype = 103;
-			if (item_current == "Type 104")
-				glowtype = 104;
-			if (item_current == "Type 117")
-				glowtype = 117;
-			*/
 
 
-			
 
 
 
