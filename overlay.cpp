@@ -104,20 +104,20 @@ void configLoad(std::string con)
 	ConfigFile cfg = ConfigFile::ConfigFile(con);
 
 	firing_range = cfg.GetBool("Glow Type", false);
-	aim = cfg.GetInt("Glow Type", false);
-	esp = cfg.GetBool("Glow Type", false);
-	item_glow = cfg.GetBool("Glow Type", false);
-	player_glow = cfg.GetBool("Glow Type", false);
-	aim_no_recoil = cfg.GetBool("Glow Type", false);
-	max_dist = cfg.GetFloat("Glow Type", false);
-	smooth = cfg.GetFloat("Glow Type", false);
-	max_fov = cfg.GetFloat("Glow Type", false);
-	bone = cfg.GetInt("Glow Type", false);
-	glowr = cfg.GetFloat("Glow Type", false);
-	glowg = cfg.GetFloat("Glow Type", false);
-	glowb = cfg.GetFloat("Glow Type", false);
-	glowtype = cfg.GetInt("Glow Type", false);
-	glowtype2 = cfg.GetInt("Glow Type", false);
+	aim = cfg.GetInt("Glow Type", 2);
+	esp = cfg.GetBool("Glow Type", true);
+	item_glow = cfg.GetBool("Glow Type", true);
+	player_glow = cfg.GetBool("Glow Type", true);
+	aim_no_recoil = cfg.GetBool("Glow Type", true);
+	max_dist = cfg.GetFloat("Glow Type", 3800.0f * 40.0f);
+	smooth = cfg.GetFloat("Glow Type", 100.0f);
+	max_fov = cfg.GetFloat("Glow Type", 15.0f);
+	bone = cfg.GetInt("Glow Type", 2);
+	glowr = cfg.GetFloat("Glow Type", 0.0f);
+	glowg = cfg.GetFloat("Glow Type", 120.0f);
+	glowb = cfg.GetFloat("Glow Type", 120.0f);
+	glowtype = cfg.GetInt("Glow Type", 1);
+	glowtype2 = cfg.GetInt("Glow Type", 2);
 }
 
 void configSave(std::string con)
