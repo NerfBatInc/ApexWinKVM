@@ -29,7 +29,7 @@ extern float glowg;
 extern float glowb;
 extern int glowtype;
 extern int glowtype2;
-float glowcolor[3] = { 000.0f, 000.0f, 000.0f };
+extern float glowcolor[3];
 
 const char* items[] = { "Default for RGB Colors", "BloodHound" };
 const char* item_current = "Default for RGB Colors";

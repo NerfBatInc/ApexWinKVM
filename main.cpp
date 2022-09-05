@@ -1,5 +1,6 @@
 #include "main.h"
 
+
 typedef struct player
 {
 	float dist = 0;
@@ -54,6 +55,7 @@ int bone = 2;
 float glowr = 0.0f;
 float glowg = 120.0f;
 float glowb = 120.0f;
+float glowcolor[3] = { 000.0f, 000.0f, 000.0f };
 int glowtype = 1;
 int glowtype2 = 2;
 
@@ -200,6 +202,9 @@ void Overlay::RenderEsp()
 	}
 }
 
+
+
+
 int main(int argc, char** argv)
 {
 	add[0] = (uintptr_t)&check;
@@ -256,6 +261,39 @@ int main(int argc, char** argv)
 			active = false;
 		}
 
+		//run load settings once 
+
+		for (static bool once = true; once; once = false) {
+			std::ifstream config("Config.txt");
+
+			if (config.is_open())
+			{
+
+
+				config >> std::boolalpha >> firing_range;
+				config >> aim;
+				config >> std::boolalpha >> esp;
+				config >> std::boolalpha >> item_glow;
+				config >> std::boolalpha >> player_glow;
+				config >> std::boolalpha >> aim_no_recoil;
+				config >> max_dist;
+				config >> smooth;
+				config >> max_fov;
+				config >> bone;
+				config >> glowr;
+				config >> glowg;
+				config >> glowb;
+				config >> glowtype;
+				config >> glowtype2;
+				config >> glowcolor[0];
+				config >> glowcolor[1];
+				config >> glowcolor[2];
+				//config >> item_current; // no idea how to imput a string of words 
+
+
+				config.close();
+			}
+		}
 
 
 
