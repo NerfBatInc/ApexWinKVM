@@ -201,7 +201,7 @@ void Overlay::RenderMenu()
 
 
 
-			if (ImGui::BeginCombo("Glow Type", item_current)) // The second parameter is the label previewed before opening the combo.
+			/*if (ImGui::BeginCombo("Glow Type", item_current)) // The second parameter is the label previewed before opening the combo.
 			{
 				for (int n = 0; n < IM_ARRAYSIZE(items); n++)
 				{
@@ -217,7 +217,7 @@ void Overlay::RenderMenu()
 				glowtype = 1;
 			if (item_current == "BloodHound")
 				glowtype = 7;
-
+			*/
 
 
 
