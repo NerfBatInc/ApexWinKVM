@@ -1,6 +1,5 @@
 #include "overlay.h"
-#include "Config.cpp"
-#include "Config.h"
+
 
 extern bool firing_range;
 extern int aim;
@@ -94,54 +93,6 @@ void CleanupDeviceD3D();
 void CreateRenderTarget();
 void CleanupRenderTarget();
 
-//Save and Load void
-
-
-void configLoad(std::string con)
-{
-	con.append(".cfg");
-
-	ConfigFile cfg = ConfigFile::ConfigFile(con);
-
-	firing_range = cfg.GetBool("Glow Type", false);
-	aim = cfg.GetInt("Glow Type", 2);
-	esp = cfg.GetBool("Glow Type", true);
-	item_glow = cfg.GetBool("Glow Type", true);
-	player_glow = cfg.GetBool("Glow Type", true);
-	aim_no_recoil = cfg.GetBool("Glow Type", true);
-	max_dist = cfg.GetFloat("Glow Type", 3800.0f * 40.0f);
-	smooth = cfg.GetFloat("Glow Type", 100.0f);
-	max_fov = cfg.GetFloat("Glow Type", 15.0f);
-	bone = cfg.GetInt("Glow Type", 2);
-	glowr = cfg.GetFloat("Glow Type", 0.0f);
-	glowg = cfg.GetFloat("Glow Type", 120.0f);
-	glowb = cfg.GetFloat("Glow Type", 120.0f);
-	glowtype = cfg.GetInt("Glow Type", 1);
-	glowtype2 = cfg.GetInt("Glow Type", 2);
-}
-
-void configSave(std::string con)
-{
-	con.append(".cfg");
-
-	ConfigFile cfg(con);
-
-	cfg.SetBool("Glow Type", firing_range);
-	cfg.SetInt("Glow Type", aim);
-	cfg.SetBool("Glow Type", esp);
-	cfg.SetBool("Glow Type", item_glow);
-	cfg.SetBool("Glow Type", player_glow);
-	cfg.SetBool("Glow Type", aim_no_recoil);
-	cfg.SetFloat("Glow Type", max_dist);
-	cfg.SetFloat("Glow Type", smooth);
-	cfg.SetFloat("Glow Type", max_fov);
-	cfg.SetInt("Glow Type", bone);
-	cfg.SetFloat("Glow Type", glowr);
-	cfg.SetFloat("Glow Type", glowg);
-	cfg.SetFloat("Glow Type", glowb);
-	cfg.SetInt("Glow Type", glowtype);
-	cfg.SetInt("Glow Type", glowtype2);
-}
 
 void Overlay::RenderMenu()
 {
@@ -222,9 +173,9 @@ void Overlay::RenderMenu()
 			ImGui::SliderInt(XorStr("##4"), &bone, 0, 175);
 
 			if (ImGui::Button("Save config"))
-				configSave(configName);
+				
 			if (ImGui::Button("Load config"))
-				configLoad(configName);
+				
 
 
 			ImGui::Checkbox(XorStr("Firing Range Toggle"), &firing_range);

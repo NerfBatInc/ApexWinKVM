@@ -1,5 +1,6 @@
 #pragma once
 
+  
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -10,35 +11,36 @@
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
-
+ 
 using namespace std;
 
 #define CONFIG_VALID_KEY_CHARS "abcdefghijklmnopqrstuvwxyz_0123456789"
 #define CONFIG_WHITESPACES " \t\r\n\v\b\f"
-
+ 
 class ConfigFile
 {
 public:
+
 	//Creates Config object
 	//If file parameter is specified it will load that file
 	ConfigFile();
 	ConfigFile(string configName);
 	ConfigFile(ifstream& file);
 	~ConfigFile() = default;
-
+ 
 	//Loads file contents to storage.
 	//Exisings settings are not removed from storage.
 	//If there is setting with the same name in loaded file it will overwrite existing value for that entry
 	bool Load(ifstream& file);
 	bool Load(string fileName);
 	bool Load();
-
+ 
 	//Saves contents of internal storage to file
 	//If no file specified it will use filename from constructor.
 	bool Save(bool sortAlphabetically = false);
 	bool Save(ofstream& file, bool sortAlphabetically = false);
 	bool Save(string fileName, bool sortAlphabetically = false);
-
+ 
 	//Getters funcitons
 	//If setting with given name is not found in storage it will return "noKeyValue" and
 	//add that setting to storage with default value
@@ -52,7 +54,7 @@ public:
 	unsigned int GetPtr32(string key, unsigned int noKeyValue);
 	unsigned __int64 GetPtr64(string key, unsigned __int64 noKeyValue);
 	unsigned int GetVKCode(string key, unsigned int noKeyValue);
-
+ 
 	//Setters for diferent types of setting.
 	//If setting already exists in storage only value will be updated.
 	//If there is no setting with that name in storage it will be created.
@@ -66,7 +68,7 @@ public:
 	void SetPtr32(string key, unsigned int value);
 	void SetPtr64(string key, unsigned __int64 value);
 	void SetVKCode(string key, unsigned int value);
-
+ 
 private:
 	unordered_map<string, string> configMap;
 	vector<string> orderVector;
