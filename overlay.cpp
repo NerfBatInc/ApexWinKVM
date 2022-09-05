@@ -1,4 +1,8 @@
 #include "overlay.h"
+#include <fstream>
+#include <iomanip>
+using namespace std;
+
 
 
 
@@ -178,11 +182,62 @@ void Overlay::RenderMenu()
 			ImGui::Text(XorStr("Aim at (bone id):"));
 			ImGui::SliderInt(XorStr("##4"), &bone, 0, 175);
 
-			if (ImGui::Button("Save config"))
+			if (ImGui::Button("Save Config"))
+			{
+				ofstream config("Config.txt");
+				
+				if (config.is_open())
+				{
+					
+
+					config << std::boolalpha << firing_range << "\n";
+					config << aim << "\n";
+					config << std::boolalpha << esp << "\n";
+					config << std::boolalpha << item_glow << "\n";
+					config << std::boolalpha << player_glow << "\n";
+					config << std::boolalpha << aim_no_recoil << "\n";
+					config << std::fixed << max_dist << "f" << "\n";
+					config << std::fixed << smooth << "f" << "\n";
+					config << std::fixed << max_fov << "f" << "\n";
+					config << bone << "\n";
+					config << std::fixed << glowr << "f" << "\n";
+					config << std::fixed << glowg << "f" << "\n";
+					config << std::fixed << glowb << "f" << "\n";
+					config << glowtype << "\n";
+					config << glowtype2;
+
+					config.close();
+				}
+			}
 			ImGui::SameLine();
-			if (ImGui::Button("Load config"))
-					
-					
+			if (ImGui::Button("Load Config"))
+			{
+				
+				ifstream config("Config.txt");
+
+				if (config.is_open())
+				{
+
+
+					config >> std::boolalpha >> firing_range;
+					config >> aim;
+					config >> std::boolalpha >> esp;
+					config >> std::boolalpha >> item_glow;
+					config >> std::boolalpha >> player_glow;
+					config >> std::boolalpha >> aim_no_recoil;
+					config >> std::fixed >> max_dist;
+					config >> std::fixed >> smooth;
+					config >> std::fixed >> max_fov;
+					config >> bone;
+					config >> std::fixed >> glowr;
+					config >> std::fixed >> glowg;
+					config >> std::fixed >> glowb;
+					config >> glowtype;
+					config >> glowtype2;
+
+					config.close();
+				}
+			}
 
 
 			ImGui::Checkbox(XorStr("Firing Range Toggle"), &firing_range);
