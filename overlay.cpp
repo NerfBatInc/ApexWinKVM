@@ -273,7 +273,10 @@ void Overlay::RenderMenu()
 					config << glowb << "\n";
 					config << glowtype << "\n";
 					config << glowtype2 << "\n";
-					config << item_current;
+					config << glowcolor[0] << "\n";
+					config << glowcolor[1] << "\n";
+					config << glowcolor[2];
+					//config << item_current;  //what
 
 					config.close();
 				}
@@ -303,6 +306,9 @@ void Overlay::RenderMenu()
 					config >> glowb;
 					config >> glowtype;
 					config >> glowtype2;
+					config >> glowcolor[0];
+					config >> glowcolor[1];
+					config >> glowcolor[2];
 					//config >> item_current; // no idea how to imput a string of words 
 					
 
