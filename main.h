@@ -15,18 +15,7 @@
 #include <future>
 
 
-//Load and Save includes
 
-#include <stdio.h>
-#include "Config.h"
-
-#include <map>
-#include <unordered_map>
-
-#include <string>
-#include <sstream>
-#include <iomanip>
-#include <algorithm>
 
 
 

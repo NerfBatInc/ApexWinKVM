@@ -1,6 +1,8 @@
 #include "overlay.h"
 
 
+
+
 extern bool firing_range;
 extern int aim;
 extern bool esp;
@@ -94,6 +96,10 @@ void CreateRenderTarget();
 void CleanupRenderTarget();
 
 
+
+
+
+
 void Overlay::RenderMenu()
 {
 	static bool aim_enable = false;
@@ -118,7 +124,7 @@ void Overlay::RenderMenu()
 		aim_enable = false;
 		vis_check = false;
 	}
-
+	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(450, 260), ImGuiCond_Once);
 	ImGui::Begin(XorStr("##title"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
@@ -173,9 +179,10 @@ void Overlay::RenderMenu()
 			ImGui::SliderInt(XorStr("##4"), &bone, 0, 175);
 
 			if (ImGui::Button("Save config"))
-				
+			ImGui::SameLine();
 			if (ImGui::Button("Load config"))
-				
+					
+					
 
 
 			ImGui::Checkbox(XorStr("Firing Range Toggle"), &firing_range);

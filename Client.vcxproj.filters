@@ -40,9 +40,6 @@
     <ClCompile Include="imgui\imgui_impl_dx11.cpp">
       <Filter>Source\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Config.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="overlay.h">
@@ -81,9 +78,6 @@
     </ClInclude>
     <ClInclude Include="offsets.h">
       <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Config.h">
-      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
