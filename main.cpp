@@ -233,11 +233,11 @@ int main(int argc, char** argv)
 	add[23] = (uintptr_t)&firing_range;
 	add[24] = (uintptr_t)&glowtype;
 	add[25] = (uintptr_t)&glowtype2;
-	printf(XorStr("Game Version 3.0.10.29 |-| Save and Load Ver |-| Add me offset: 0x%I64x\n"), (uint64_t)&add[0] - (uint64_t)GetModuleHandle(NULL));
+	printf(XorStr("Game Version 3.0.11.32 |-| Menu with Save and Load Ver |-| Add me offset: 0x%I64x\n"), (uint64_t)&add[0] - (uint64_t)GetModuleHandle(NULL));
 
 	Overlay ov1 = Overlay();
 	ov1.Start();
-	printf(XorStr("Waiting for chestburster ....The Monkey is dead!\n"));
+	printf(XorStr("Waiting for Zootopia 2 ....The Fox is Alive!\n"));
 	while (check == 0xABCD)
 	{
 		if (IsKeyDown(VK_F4))
