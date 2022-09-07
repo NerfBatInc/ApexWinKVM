@@ -30,7 +30,7 @@ struct c_entity
 
 	D3DXVECTOR3		b_x;
 	D3DXVECTOR3		b_y;
-	
+
 	D3DXVECTOR2		h_y;
 
 }LocalPlayer;
@@ -195,17 +195,17 @@ void DrawRadarPoint(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlay
 	pos.y = yAxis;
 	bool ck = false;
 
-	FilledRectangle( pos.x, pos.y, siz.x, siz.y, { 255, 255, 255, 255 });
+	//FilledRectangle(pos.x, pos.y, siz.x, siz.y, { 255, 255, 255, 255 });
 
-	//D3DXVECTOR3 single = RotatePoint(EneamyPos, LocalPos, pos.x, pos.y, siz.x, siz.y, LocalPlayerY, 2.f, &ck);
-	//if (RadarSettings::Radar = true)
-	//{
+	D3DXVECTOR3 single = RotatePoint(EneamyPos, LocalPos, pos.x, pos.y, siz.x, siz.y, LocalPlayerY, 2.f, &ck);
+	if (RadarSettings::Radar = true)
+	{
 		//if (radartype == 0)
 		//	Drawing::DrawOutlinedText(font, std::to_string((int)eneamyDist), ImVec2(single.x, single.y), 11, { 255, 255, 255, 255 }, true);
 		//else
-		//FilledRectangle(single.x, single.y, 7, 7, { 255, 255, 255, 255 });
+		FilledRectangle(single.x, single.y, 7, 7, { 255, 255, 255, 255 });
 
-	//}
+	}
 }
 
 
@@ -260,7 +260,7 @@ void randomBone100() {
 	int smootharray[139]{ 90.0, 91.0, 92.0, 93.0, 94.0, 95.0, 96.0, 97.0, 98.0, 99.0, 100.0, 101.0, 102.0, 103.0, 104.0, 105.0, 106.0, 107.0, 108.0, 109.0, 110.0, 111.0, 112.0, 113.0, 114.0, 115.0, 116.0, 117.0, 118.0, 119.0, 120.0, 121.0, 122.0, 123.0, 124.0, 125.0, 126.0, 127.0, 128.0, 129.0, 130.0, 131.0, 132.0, 133.0, 134.0, 135.0, 136.0, 137.0, 138.0, 139.0, 140.0, 141.0, 142.0, 143.0, 144.0, 145.0, 146.0, 147.0, 148.0 };
 	int randSmooth = rand() % 50;
 	smooth = smootharray[randSmooth];
-	
+
 }
 
 
@@ -322,17 +322,17 @@ void Overlay::RenderEsp()
 						}
 					}
 
-					if(v.line)
+					if (v.line)
 						DrawLine(ImVec2((float)(getWidth() / 2), (float)getHeight()), ImVec2(players[i].b_x, players[i].b_y), BLUE, 1); //LINE FROM MIDDLE SCREEN
 
 					if (v.distance)
 					{
 						if (players[i].knocked)
 							String(ImVec2(players[i].boxMiddle, (players[i].b_y + 1)), RED, distance.c_str());  //DISTANCEs			else
-							String(ImVec2(players[i].boxMiddle, (players[i].b_y + 1)), GREEN, distance.c_str());  //DISTANCE
+						String(ImVec2(players[i].boxMiddle, (players[i].b_y + 1)), GREEN, distance.c_str());  //DISTANCE
 					}
 
-					if(v.healthbar)
+					if (v.healthbar)
 						if (players[i].dist < 16000.0f)
 						{
 
@@ -405,7 +405,7 @@ int main(int argc, char** argv)
 		ready = true;
 		printf(XorStr("Ready To Cure\n"));
 	}
-		
+
 	while (active)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -476,7 +476,7 @@ int main(int argc, char** argv)
 			k_f6 = 0;
 		}
 
-	
+
 
 		if (IsKeyDown(VK_F9) && k_f100 == 1)
 		{
@@ -489,7 +489,7 @@ int main(int argc, char** argv)
 			k_f20 = 0;
 			k_f100 = 1;
 			k_f8 = 1;
-			
+
 		}
 
 
@@ -507,14 +507,14 @@ int main(int argc, char** argv)
 			k_f100 = 0;
 			bone = 1;
 			smooth = 100;
-			
+
 		}
 
 
 
 
 		if (IsKeyDown(aim_key))
-		
+
 			aiming = true;
 
 
@@ -526,24 +526,24 @@ int main(int argc, char** argv)
 		if (IsKeyDown(shoot_key))
 		{
 			shooting = true;
-			
+
 		}
 
 		if (IsKeyDown(shoot_key2))
 		{
 			shooting = true;
-			
+
 		}
 
 
-		
-	
-		
+
+
+
 
 	}
 	ready = false;
 	ov1.Clear();
-	if(!use_nvidia)
+	if (!use_nvidia)
 		system(XorStr("taskkill /F /T /IM Nvspcaps64.exe")); //custom overlay process name
 	return 0;
 }

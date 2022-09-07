@@ -79,6 +79,9 @@
     <ClInclude Include="offsets.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Desktop\TESTKVM\ApexWinKVM-master\DirectXMath.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />
