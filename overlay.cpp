@@ -1,6 +1,7 @@
 #include "overlay.h"
 #include <fstream>
 #include <iomanip>
+
 using namespace std;
 
 
@@ -194,7 +195,7 @@ void Overlay::RenderMenu()
 			ImGui::SameLine();
 			ImGui::Checkbox(XorStr("Shield bar"), &v.shieldbar);
 			ImGui::Text(XorStr("ESP options:"));
-			//ImGui::Checkbox(XorStr("Box"), &v.box);
+			ImGui::Checkbox(XorStr("Radar"), &v.box);
 
 			//glow type, IT WORKS
 			//  https://casualhacks.net/apexstuff/highlight-functions.html  types im messing with
@@ -650,6 +651,25 @@ void DrawHexagonFilled(const ImVec2& p1, const ImVec2& p2, const ImVec2& p3, con
 {
 	ImGui::GetWindowDrawList()->AddHexagonFilled(p1, p2, p3, p4, p5, p6, col);
 }
+
+//radar test
+
+
+//radar test
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Seer
 
 

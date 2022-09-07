@@ -1,6 +1,8 @@
 #include "main.h"
 
 
+
+
 typedef struct player
 {
 	float dist = 0;
@@ -21,7 +23,17 @@ typedef struct player
 	char name[33] = { 0 };
 }player;
 
+
 uint32_t check = 0xABCD;
+struct c_entity
+{
+
+	D3DXVECTOR3		b_x;
+	D3DXVECTOR3		b_y;
+	
+	D3DXVECTOR2		h_y;
+
+}LocalPlayer;
 
 
 
@@ -88,7 +100,154 @@ bool k_f100 = 0;
 
 
 //Rand smoothing
+
+
+//radar test
+
+#define M_PI		3.14159265358979323846	// matches value in gcc v2 math.h
+
+
+
+
+static D3DXVECTOR3 RotatePoint(D3DXVECTOR3 EntityPos, D3DXVECTOR3 LocalPlayerPos, int posX, int posY, int sizeX, int sizeY, float angle, float zoom, bool* viewCheck)
+{
+	float r_1, r_2;
+	float x_1, y_1;
+
+	r_1 = -(EntityPos.y - LocalPlayerPos.y);
+	r_2 = EntityPos.x - LocalPlayerPos.x;
+	float Yaw = angle - 90.0f;
+
+	float yawToRadian = Yaw * (float)(M_PI / 180.0F);
+	x_1 = (float)(r_2 * (float)cos((double)(yawToRadian)) - r_1 * sin((double)(yawToRadian))) / 20;
+	y_1 = (float)(r_2 * (float)sin((double)(yawToRadian)) + r_1 * cos((double)(yawToRadian))) / 20;
+
+	*viewCheck = y_1 < 0;
+
+	x_1 *= zoom;
+	y_1 *= zoom;
+
+	int sizX = sizeX / 2;
+	int sizY = sizeY / 2;
+
+	x_1 += sizX;
+	y_1 += sizY;
+
+	if (x_1 < 5)
+		x_1 = 5;
+
+	if (x_1 > sizeX - 5)
+		x_1 = sizeX - 5;
+
+	if (y_1 < 5)
+		y_1 = 5;
+
+	if (y_1 > sizeY - 5)
+		y_1 = sizeY - 5;
+
+
+	x_1 += posX;
+	y_1 += posY;
+
+
+	return D3DXVECTOR3(x_1, y_1, 0);
+}
+
+typedef struct
+{
+
+	DWORD R;
+	DWORD G;
+	DWORD B;
+	DWORD A;
+}RGBA;
+static void FilledRectangle(int x, int y, int w, int h, RGBA color)
+{
+	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(x, y), ImVec2(x + w, y + h), ImGui::ColorConvertFloat4ToU32(ImVec4(color.R / 255.0, color.G / 255.0, color.B / 255.0, color.A / 255.0)), 0, 0);
+}
+
+
 int randomstuff = 0;
+bool menu = true;
+bool firstS = false;
+
+namespace RadarSettings
+{
+	bool Radar = true;
+	bool teamRadar = true;
+	bool enemyRadar = true;
+	int xAxis_Radar = 0;
+	int yAxis_Radar = 400;
+	int radartype = 0;
+	int width_Radar = 400;
+	int height_Radar = 400;
+	int distance_Radar = 400;
+};
+
+void DrawRadarPoint(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, float eneamyDist, int xAxis, int yAxis, int width, int height, D3DXCOLOR color)
+{
+	bool out = false;
+	D3DXVECTOR3 siz;
+	siz.x = width;
+	siz.y = height;
+	D3DXVECTOR3 pos;
+	pos.x = xAxis;
+	pos.y = yAxis;
+	bool ck = false;
+
+	FilledRectangle( pos.x, pos.y, siz.x, siz.y, { 255, 255, 255, 255 });
+
+	//D3DXVECTOR3 single = RotatePoint(EneamyPos, LocalPos, pos.x, pos.y, siz.x, siz.y, LocalPlayerY, 2.f, &ck);
+	//if (RadarSettings::Radar = true)
+	//{
+		//if (radartype == 0)
+		//	Drawing::DrawOutlinedText(font, std::to_string((int)eneamyDist), ImVec2(single.x, single.y), 11, { 255, 255, 255, 255 }, true);
+		//else
+		//FilledRectangle(single.x, single.y, 7, 7, { 255, 255, 255, 255 });
+
+	//}
+}
+
+
+void pkRadar(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, float eneamyDist)
+{
+	ImGuiStyle* style = &ImGui::GetStyle();
+	style->WindowRounding = 0.2f;
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.13529413f, 0.14705884f, 0.15490198f, 0.82f));
+	ImGuiWindowFlags TargetFlags;
+	if (menu)
+		TargetFlags = ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
+	else
+		TargetFlags = ImGuiWindowFlags_::ImGuiWindowFlags_NoMove | ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse;
+
+	if (!firstS)
+	{
+		ImGui::SetNextWindowPos(ImVec2{ 1200, 60 }, ImGuiCond_Once);
+		firstS = true;
+	}
+	if (RadarSettings::Radar == true)
+	{
+		ImGui::SetNextWindowSize({ 250, 250 });
+		ImGui::Begin(("Radar"), 0, TargetFlags);
+		//if (ImGui::Begin(xorstr("Radar", 0, ImVec2(200, 200), -1.f, TargetFlags))) {
+		{
+			ImDrawList* Draw = ImGui::GetWindowDrawList();
+			ImVec2 DrawPos = ImGui::GetCursorScreenPos();
+			ImVec2 DrawSize = ImGui::GetContentRegionAvail();
+			ImVec2 midRadar = ImVec2(DrawPos.x + (DrawSize.x / 2), DrawPos.y + (DrawSize.y / 2));
+			ImGui::GetWindowDrawList()->AddLine(ImVec2(midRadar.x - DrawSize.x / 2.f, midRadar.y), ImVec2(midRadar.x + DrawSize.x / 2.f, midRadar.y), IM_COL32(255, 255, 255, 255));
+			ImGui::GetWindowDrawList()->AddLine(ImVec2(midRadar.x, midRadar.y - DrawSize.y / 2.f), ImVec2(midRadar.x, midRadar.y + DrawSize.y / 2.f), IM_COL32(255, 255, 255, 255));
+
+			DrawRadarPoint(EneamyPos, LocalPos, LocalPlayerY, eneamyDist, DrawPos.x, DrawPos.y, DrawSize.x, DrawSize.y, { 255, 255, 255, 255 });
+		}
+		ImGui::End();
+	}
+	ImGui::PopStyleColor();
+}
+
+
+
+
 
 
 
@@ -131,6 +290,7 @@ player players[100];
 
 
 
+
 void Overlay::RenderEsp()
 {
 	next2 = false;
@@ -156,16 +316,9 @@ void Overlay::RenderEsp()
 					distance = distance.substr(0, distance.find('.')) + "m(" + std::to_string(players[i].entity_team) + ")";
 					if (v.box)
 					{
-						if (players[i].visible)
+						if (RadarSettings::Radar == true)
 						{
-							if (players[i].dist < 1600.0f)
-								DrawBox(RED, players[i].boxMiddle, players[i].h_y, players[i].width, players[i].height); //BOX
-							else
-								DrawBox(ORANGE, players[i].boxMiddle, players[i].h_y, players[i].width, players[i].height); //BOX
-						}
-						else
-						{
-							DrawBox(WHITE, players[i].boxMiddle, players[i].h_y, players[i].width, players[i].height); //white if player not visible
+							pkRadar(LocalPlayer.b_x, LocalPlayer.b_y, players[i].h_y, players[i].dist);
 						}
 					}
 
@@ -233,7 +386,7 @@ int main(int argc, char** argv)
 	add[23] = (uintptr_t)&firing_range;
 	add[24] = (uintptr_t)&glowtype;
 	add[25] = (uintptr_t)&glowtype2;
-	printf(XorStr("Game Version 3.0.11.32 |-| Menu with Save and Load Ver |-| Add me offset: 0x%I64x\n"), (uint64_t)&add[0] - (uint64_t)GetModuleHandle(NULL));
+	printf(XorStr("Game Version 3.0.11.32 |-| Radar Test Ver |-| Add me offset: 0x%I64x\n"), (uint64_t)&add[0] - (uint64_t)GetModuleHandle(NULL));
 
 	Overlay ov1 = Overlay();
 	ov1.Start();

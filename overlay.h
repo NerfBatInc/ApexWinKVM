@@ -15,6 +15,8 @@
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
 #include <d3d11.h>
+#include <d3d10_1.h>
+#include "D3DX10Math.h"
 #pragma comment(lib, "d3d11.lib")
 
 #define GREEN ImColor(0, 255, 0)
@@ -55,6 +57,9 @@ public:
 	//Seer
 
 	void DrawSeerLikeHealth(float x, float y, int shield, int max_shield, int armorType, int health);
+
+	//radar test
+	//void pkRadar(ImVec2 EneamyPos, ImVec2 LocalPos, float LocalPlayerY, float eneamyDist);
 
 
 
