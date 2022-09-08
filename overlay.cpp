@@ -32,6 +32,17 @@ extern int glowtype;
 extern int glowtype2;
 extern float glowcolor[3];
 
+//fov stuff
+extern bool fovcircle;
+extern float fovsize;
+extern float fovsize2;
+extern float fovcolorset[4];
+extern float fovcolor1;
+extern float fovcolor2;
+extern float fovcolor3;
+extern float fovthick;
+
+
 const char* items[] = { "Default for RGB Colors", "BloodHound" };
 const char* item_current = "Default for RGB Colors";
 
@@ -182,6 +193,12 @@ void Overlay::RenderMenu()
 
 			ImGui::Text(XorStr("Max FOV:"));
 			ImGui::SliderFloat(XorStr("##3"), &max_fov, 5.0f, 250.0f, "%.2f");
+			ImGui::Checkbox("Circle Fov", &fovcircle);
+			ImGui::SliderFloat("Circle size", &fovsize, 0, 1920, "%.3f size");
+			ImGui::SliderFloat("Circle size Zoomed in", &fovsize2, 0, 1920, "%.3f size");
+
+			
+			//ImGui::Checkbox(XorStr("Fov Circle"), &fovcircle);
 
 			ImGui::Text(XorStr("Aim at 0=Head, 1=Neck, 2=Chest, 3=Stomach"));
 			ImGui::SliderInt(XorStr("##4"), &bone, 0, 175);
@@ -243,11 +260,19 @@ void Overlay::RenderMenu()
 			
 
 			ImGui::ColorEdit3("Glow Color Picker", glowcolor);
-			
-			glowr = glowcolor[0] * 250;
-			glowg = glowcolor[1] * 250;
-			glowb = glowcolor[2] * 250;
-			
+			{
+				glowr = glowcolor[0] * 250;
+				glowg = glowcolor[1] * 250;
+				glowb = glowcolor[2] * 250;
+			}
+			ImGui::ColorEdit4("Fov Color Picker", fovcolorset);
+			{
+
+				fovcolor1 = fovcolorset[0] * 250;
+				fovcolor2 = fovcolorset[1] * 250;
+				fovcolor3 = fovcolorset[2] * 250;
+				fovthick = fovcolorset[3] * 250;
+			}
 			
 
 
@@ -276,7 +301,22 @@ void Overlay::RenderMenu()
 					config << glowtype2 << "\n";
 					config << glowcolor[0] << "\n";
 					config << glowcolor[1] << "\n";
-					config << glowcolor[2];
+					config << glowcolor[2] << "\n";
+					config << v.healthbar << "\n";
+					config << v.shieldbar << "\n";
+					config << v.distance << "\n";
+					config << thirdperson << "\n";
+					config << fovcircle << "\n";
+					config << fovsize << "\n";
+					config << fovsize2 << "\n";
+					config << fovcolor1 << "\n";
+					config << fovcolor2 << "\n";
+					config << fovcolor3 << "\n";
+					config << fovcolorset[0] << "\n";
+					config << fovcolorset[1] << "\n";
+					config << fovcolorset[2] << "\n";
+					config << fovcolorset[3] << "\n";
+					config << fovthick;
 					//config << item_current;  //what
 
 					config.close();
@@ -310,6 +350,21 @@ void Overlay::RenderMenu()
 					config >> glowcolor[0];
 					config >> glowcolor[1];
 					config >> glowcolor[2];
+					config >> v.healthbar;
+					config >> v.shieldbar;
+					config >> v.distance;
+					config >> thirdperson;
+					config >> fovcircle;
+					config >> fovsize;
+					config >> fovsize2;
+					config >> fovcolor1;
+					config >> fovcolor2;
+					config >> fovcolor3;
+					config >> fovcolorset[0];
+					config >> fovcolorset[1];
+					config >> fovcolorset[2];
+					config >> fovcolorset[3];
+					config >> fovthick;
 					//config >> item_current; // no idea how to imput a string of words 
 					
 
@@ -609,6 +664,7 @@ void Overlay::DrawBox(ImColor color, float x, float y, float w, float h)
 	DrawLine(ImVec2(x + w, y), ImVec2(x + w, y + h), color, 1.0f);
 	DrawLine(ImVec2(x, y + h), ImVec2(x + w, y + h), color, 1.0f);
 }
+
 
 void Overlay::Text(ImVec2 pos, ImColor color, const char* text_begin, const char* text_end, float wrap_width, const ImVec4* cpu_fine_clip_rect)
 {

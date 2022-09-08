@@ -25,15 +25,16 @@ typedef struct player
 
 
 uint32_t check = 0xABCD;
-struct c_entity
+
+typedef struct radarplayer
 {
 
-	D3DXVECTOR3		b_x;
-	D3DXVECTOR3		b_y;
+	D3DXVECTOR3		EntityPosition;
+	D3DXVECTOR3		LocalPlayerPosition;
+	float		localyaw;
 
-	D3DXVECTOR2		h_y;
+}radarplayer;
 
-}LocalPlayer;
 
 
 
@@ -70,6 +71,22 @@ float glowb = 120.0f;
 float glowcolor[3] = { 000.0f, 000.0f, 000.0f };
 int glowtype = 1;
 int glowtype2 = 2;
+//int xs = 960;
+//int yx = 540;
+
+
+//fov stuff
+float fovsize = max_fov * 8.4;
+float fovsize2 = max_fov * 10.7;
+int zoomf1 = 0;
+int zoomf2 = 0;
+bool fovcircle = true;
+float fovcolorset[4] = { 000.0f, 000.0f, 000.0f, 000.0f };
+float fovcolor1 = 50.0f;
+float fovcolor2 = 50.0f;
+float fovcolor3 = 50.0f;
+float fovthick;
+
 
 
 bool thirdperson = false;
@@ -84,7 +101,7 @@ bool shooting = false; //read
 bool valid = false; //write
 bool next2 = false; //read write
 
-uint64_t add[27];
+uint64_t add[28];
 
 bool k_f5 = 0;
 bool k_f6 = 0;
@@ -99,10 +116,34 @@ bool k_f100 = 0;
 
 
 
-//Rand smoothing
+//Fov Cirlce test
 
 
-//radar test
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*//radar test
 
 #define M_PI		3.14159265358979323846	// matches value in gcc v2 math.h
 
@@ -169,7 +210,7 @@ static void FilledRectangle(int x, int y, int w, int h, RGBA color)
 
 int randomstuff = 0;
 bool menu = true;
-bool firstS = false;
+bool firstS = true;
 
 namespace RadarSettings
 {
@@ -250,7 +291,7 @@ void pkRadar(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, fl
 
 
 
-
+*/
 
 //random smoothing from 90 to 149 with 2-3 bone id
 void randomBone100() {
@@ -285,18 +326,36 @@ bool IsKeyDown(int vk)
 
 player players[100];
 
-
-
-
-
+radarplayer radarplayers[100];
 
 
 void Overlay::RenderEsp()
 {
+	if (fovcircle && zoomf1 == 0)
+	{
+
+
+
+		//ImGui::Begin(XorStr("##esp"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus);
+		auto draw = ImGui::GetBackgroundDrawList();
+		draw->AddCircle(ImVec2(1920 / 2, 1080 / 2), fovsize, IM_COL32(fovcolor1, fovcolor2, fovcolor3, 255), 100, fovthick);
+		//ImGui::End();
+	}
+	else if (fovcircle && zoomf1 == 1)
+	{
+
+
+
+		//ImGui::Begin(XorStr("##esp"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus);
+		auto draw = ImGui::GetBackgroundDrawList();
+		draw->AddCircle(ImVec2(1920 / 2, 1080 / 2), fovsize2, IM_COL32(fovcolor1, fovcolor2, fovcolor3, 255), 100, fovthick);
+		//ImGui::End();
+	}
 	next2 = false;
 	if (g_Base != 0 && esp)
 	{
 		memset(players, 0, sizeof(players));
+		memset(radarplayers, 0, sizeof(radarplayers));
 		while (!next2 && esp)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -308,19 +367,25 @@ void Overlay::RenderEsp()
 			ImGui::SetNextWindowSize(ImVec2((float)getWidth(), (float)getHeight()));
 			ImGui::Begin(XorStr("##esp"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
+			
+
+
+			
 			for (int i = 0; i < 100; i++)
 			{
 				if (players[i].health > 0)
 				{
 					std::string distance = std::to_string(players[i].dist / 39.62);
 					distance = distance.substr(0, distance.find('.')) + "m(" + std::to_string(players[i].entity_team) + ")";
-					if (v.box)
+					/*if (v.box)
 					{
 						if (RadarSettings::Radar == true)
 						{
-							pkRadar(LocalPlayer.b_x, LocalPlayer.b_y, players[i].h_y, players[i].dist);
+							pkRadar(radarplayers[i].EntityPosition, radarplayers[i].LocalPlayerPosition, radarplayers[i].localyaw, players[i].dist);
 						}
 					}
+					*/
+
 
 					if (v.line)
 						DrawLine(ImVec2((float)(getWidth() / 2), (float)getHeight()), ImVec2(players[i].b_x, players[i].b_y), BLUE, 1); //LINE FROM MIDDLE SCREEN
@@ -386,6 +451,7 @@ int main(int argc, char** argv)
 	add[23] = (uintptr_t)&firing_range;
 	add[24] = (uintptr_t)&glowtype;
 	add[25] = (uintptr_t)&glowtype2;
+	add[26] = (uintptr_t)&radarplayers[0];
 	printf(XorStr("Game Version 3.0.11.32 |-| Radar Test Ver |-| Add me offset: 0x%I64x\n"), (uint64_t)&add[0] - (uint64_t)GetModuleHandle(NULL));
 
 	Overlay ov1 = Overlay();
@@ -441,6 +507,24 @@ int main(int argc, char** argv)
 				config >> glowcolor[0];
 				config >> glowcolor[1];
 				config >> glowcolor[2];
+				config >> v.healthbar;
+				config >> v.shieldbar;
+				config >> v.distance;
+				config >> thirdperson;
+				config >> fovcircle;
+				config >> fovsize;
+				config >> fovsize2;
+				config >> fovcolor1;
+				config >> fovcolor2;
+				config >> fovcolor3;
+				config >> fovcolor1;
+				config >> fovcolor2;
+				config >> fovcolor3;
+				config >> fovcolorset[0];
+				config >> fovcolorset[1];
+				config >> fovcolorset[2];
+				config >> fovcolorset[3];
+				config >> fovthick;
 				//config >> item_current; // no idea how to imput a string of words 
 
 
@@ -514,15 +598,18 @@ int main(int argc, char** argv)
 
 
 		if (IsKeyDown(aim_key))
-
+		{
 			aiming = true;
-
+			zoomf1 = 1;
+		}
 
 		else if (IsKeyDown(aim_key2))
 			aiming = true;
 		else
+		{
 			aiming = false;
-
+			zoomf1 = 0;
+		}
 		if (IsKeyDown(shoot_key))
 		{
 			shooting = true;
