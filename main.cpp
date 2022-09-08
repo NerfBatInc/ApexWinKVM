@@ -36,7 +36,6 @@ uint32_t check = 0xABCD;
 
 
 
-
 int aim_key = VK_RBUTTON;
 int aim_key2 = VK_LBUTTON;
 int shoot_key = VK_LBUTTON;
@@ -82,8 +81,8 @@ int allied_spectators = 0; //write
 bool chargerifle = false;
 bool shooting = false; //read
 
-bool valid = false; //write
-bool next2 = false; //read write
+bool valid = true; //write
+bool next2 = true; //read write
 
 uint64_t add[27];
 
@@ -97,30 +96,6 @@ bool k_f10 = 0;
 bool k_f20 = 0;
 
 bool k_f100 = 0;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -206,7 +181,7 @@ namespace RadarSettings
 	int radartype = 0;
 	int width_Radar = 400;
 	int height_Radar = 400;
-	int distance_Radar = 900;
+	int distance_Radar = 200;
 };
 
 void DrawRadarPoint(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, float eneamyDist, int xAxis, int yAxis, int width, int height, D3DXCOLOR color)
@@ -222,16 +197,17 @@ void DrawRadarPoint(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlay
 
 	//FilledRectangle(pos.x, pos.y, siz.x, siz.y, { 255, 255, 255, 255 });
 
-	D3DXVECTOR3 single = RotatePoint(EneamyPos, LocalPos, pos.x, pos.y, siz.x, siz.y, LocalPlayerY, 0.5f, &ck);
-	if (RadarSettings::Radar = true)
+	D3DXVECTOR3 single = RotatePoint(EneamyPos, LocalPos, pos.x, pos.y, siz.x, siz.y, LocalPlayerY, 0.3f, &ck);
+	if (eneamyDist >= 0.f && eneamyDist < RadarSettings::distance_Radar)
 	{
 		//if (radartype == 0)
 		//	Drawing::DrawOutlinedText(font, std::to_string((int)eneamyDist), ImVec2(single.x, single.y), 11, { 255, 255, 255, 255 }, true);
 		//else
-		FilledRectangle(single.x, single.y, 7, 7, { 255, 255, 255, 255 });
+		FilledRectangle(single.x, single.y, 5, 5, { 255, 255, 255, 255 });
 
 	}
 }
+
 
 
 void pkRadar(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, float eneamyDist)
@@ -241,7 +217,7 @@ void pkRadar(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, fl
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.13529413f, 0.14705884f, 0.15490198f, 0.82f));
 	ImGuiWindowFlags TargetFlags;
 	
-	TargetFlags = ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_::ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar;
+	TargetFlags = /*ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | */ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_::ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar;
 
 	if (!firstS)
 	{
@@ -258,6 +234,8 @@ void pkRadar(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, fl
 			ImVec2 DrawPos = ImGui::GetCursorScreenPos();
 			ImVec2 DrawSize = ImGui::GetContentRegionAvail();
 			ImVec2 midRadar = ImVec2(DrawPos.x + (DrawSize.x / 2), DrawPos.y + (DrawSize.y / 2));
+
+
 			//ImGui::GetWindowDrawList()->AddLine(ImVec2(midRadar.x - DrawSize.x / 2.f, midRadar.y), ImVec2(midRadar.x + DrawSize.x / 2.f, midRadar.y), IM_COL32(255, 255, 255, 255));
 			//ImGui::GetWindowDrawList()->AddLine(ImVec2(midRadar.x, midRadar.y - DrawSize.y / 2.f), ImVec2(midRadar.x, midRadar.y + DrawSize.y / 2.f), IM_COL32(255, 255, 255, 255));
 
@@ -328,21 +306,21 @@ void Overlay::RenderEsp()
 			
 			for (int i = 0; i < 100; i++)
 			{
-				if (v.box)
-				{
-					if (RadarSettings::Radar == true)
-					{
-						pkRadar(players[i].EntityPosition, players[i].LocalPlayerPosition, players[i].localviewangle.y, players[i].dist / 39.62);
-					}
-				}
+				
 
 				if (players[i].health > 0)
 				{
 					std::string distance = std::to_string(players[i].dist / 39.62);
 					distance = distance.substr(0, distance.find('.')) + "m(" + std::to_string(players[i].entity_team) + ")";
 
-					
-
+					float radardistance = (int)((players[i].LocalPlayerPosition, players[i].dist) / 39.62);
+					if (v.box)
+					{
+						if (RadarSettings::Radar == true)
+						{
+							pkRadar(players[i].EntityPosition, players[i].LocalPlayerPosition, players[i].localviewangle.y, radardistance);
+						}
+					}
 
 					if (v.line)
 						DrawLine(ImVec2((float)(getWidth() / 2), (float)getHeight()), ImVec2(players[i].b_x, players[i].b_y), BLUE, 1); //LINE FROM MIDDLE SCREEN
@@ -468,6 +446,7 @@ int main(int argc, char** argv)
 				config >> v.shieldbar;
 				config >> v.distance;
 				config >> thirdperson;
+				config >> v.box;
 				//config >> item_current; // no idea how to imput a string of words 
 
 

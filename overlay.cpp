@@ -140,7 +140,7 @@ void Overlay::RenderMenu()
 	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(450, 860), ImGuiCond_Once);
-	ImGui::Begin(XorStr("##title"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin(XorStr("##title"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 	if (ImGui::BeginTabBar(XorStr("Tab")))
 	{
 		if (ImGui::BeginTabItem(XorStr("Main")))
@@ -227,7 +227,8 @@ void Overlay::RenderMenu()
 					config << v.healthbar << "\n";
 					config << v.shieldbar << "\n";
 					config << v.distance << "\n";
-					config << thirdperson;
+					config << thirdperson<< "\n";
+					config << v.box;
 					config.close();
 				}
 			}
@@ -263,6 +264,7 @@ void Overlay::RenderMenu()
 					config >> v.shieldbar;
 					config >> v.distance;
 					config >> thirdperson;
+					config >> v.box;
 
 					//config >> item_current; // no idea how to imput a string of words 
 					
@@ -288,7 +290,7 @@ void Overlay::RenderInfo()
 	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(470, 25));
-	ImGui::Begin(XorStr("##info"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin(XorStr("##info"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
 	DrawLine(ImVec2(1, 5), ImVec2(400, 5), RED, 2);
 	ImGui::TextColored(RED, "%d", spectators);
 	ImGui::SameLine();
