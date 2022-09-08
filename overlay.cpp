@@ -32,15 +32,7 @@ extern int glowtype;
 extern int glowtype2;
 extern float glowcolor[3];
 
-//fov stuff
-extern bool fovcircle;
-extern float fovsize;
-extern float fovsize2;
-extern float fovcolorset[4];
-extern float fovcolor1;
-extern float fovcolor2;
-extern float fovcolor3;
-extern float fovthick;
+
 
 
 const char* items[] = { "Default for RGB Colors", "BloodHound" };
@@ -187,95 +179,25 @@ void Overlay::RenderMenu()
 			ImGui::SliderFloat(XorStr("##1"), &max_dist, 100.0f * 40, 800.0f * 40, "%.2f");
 			ImGui::SameLine();
 			ImGui::Text("(%d meters)", (int)(max_dist / 40));
-
 			ImGui::Text(XorStr("Smooth aim value:"));
 			ImGui::SliderFloat(XorStr("##2"), &smooth, 12.0f, 150.0f, "%.2f");
-
 			ImGui::Text(XorStr("Max FOV:"));
 			ImGui::SliderFloat(XorStr("##3"), &max_fov, 5.0f, 250.0f, "%.2f");
-			ImGui::Checkbox("Circle Fov", &fovcircle);
-			ImGui::SliderFloat("Circle size", &fovsize, 0, 1920, "%.3f size");
-			ImGui::SliderFloat("Circle size Zoomed in", &fovsize2, 0, 1920, "%.3f size");
-
-			
-			//ImGui::Checkbox(XorStr("Fov Circle"), &fovcircle);
-
 			ImGui::Text(XorStr("Aim at 0=Head, 1=Neck, 2=Chest, 3=Stomach"));
 			ImGui::SliderInt(XorStr("##4"), &bone, 0, 175);
-
-			
-
-
 			ImGui::Checkbox(XorStr("Distance"), &v.distance);
 			ImGui::SameLine();
 			ImGui::Checkbox(XorStr("Health bar"), &v.healthbar);
 			ImGui::SameLine();
 			ImGui::Checkbox(XorStr("Shield bar"), &v.shieldbar);
-			ImGui::Text(XorStr("ESP options:"));
 			ImGui::Checkbox(XorStr("Radar"), &v.box);
-
-			//glow type, IT WORKS
-			//  https://casualhacks.net/apexstuff/highlight-functions.html  types im messing with
-
-
-
-			/*if (ImGui::BeginCombo("Glow Type", item_current)) // The second parameter is the label previewed before opening the combo.
-			{
-				for (int n = 0; n < IM_ARRAYSIZE(items); n++)
-				{
-					bool is_selected = (item_current == items[n]);
-					if (ImGui::Selectable(items[n], is_selected))
-						item_current = items[n];
-					if (is_selected)
-						ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
-				}
-				ImGui::EndCombo();
-			}
-			if (item_current == "Default for RGB Colors")
-				glowtype = 1;
-			if (item_current == "BloodHound")
-				glowtype = 7;
-			*/
-
-
-
-
-			/*ImGui::Text(XorStr("Red Value Glow:"));
-			ImGui::SliderFloat(XorStr("Red"), &glowcolor[0], 0.0f, 250.0f, "%.2f");
-			ImGui::Text(XorStr("Green Value Glow:"));
-			ImGui::SliderFloat(XorStr("Green"), &glowcolor[1], 0.0f, 250.0f, "%.2f");
-			ImGui::Text(XorStr("Blue Value Glow:"));
-			ImGui::SliderFloat(XorStr("Blue"), &glowcolor[2], 0.0f, 250.0f, "%.2f");
-			*/
-			
-			//ImGui::Checkbox(XorStr("Name"), &v.name);
-			//ImGui::Checkbox(XorStr("Line"), &v.line);
-
-			
-
-			//Testing rando stuff
-
-
-
-			
-
+			ImGui::Text(XorStr("ESP options:"));
 			ImGui::ColorEdit3("Glow Color Picker", glowcolor);
 			{
 				glowr = glowcolor[0] * 250;
 				glowg = glowcolor[1] * 250;
 				glowb = glowcolor[2] * 250;
 			}
-			ImGui::ColorEdit4("Fov Color Picker", fovcolorset);
-			{
-
-				fovcolor1 = fovcolorset[0] * 250;
-				fovcolor2 = fovcolorset[1] * 250;
-				fovcolor3 = fovcolorset[2] * 250;
-				fovthick = fovcolorset[3] * 250;
-			}
-			
-
-
 			if (ImGui::Button("Save Config"))
 			{
 				ofstream config("Config.txt");
@@ -305,20 +227,7 @@ void Overlay::RenderMenu()
 					config << v.healthbar << "\n";
 					config << v.shieldbar << "\n";
 					config << v.distance << "\n";
-					config << thirdperson << "\n";
-					config << fovcircle << "\n";
-					config << fovsize << "\n";
-					config << fovsize2 << "\n";
-					config << fovcolor1 << "\n";
-					config << fovcolor2 << "\n";
-					config << fovcolor3 << "\n";
-					config << fovcolorset[0] << "\n";
-					config << fovcolorset[1] << "\n";
-					config << fovcolorset[2] << "\n";
-					config << fovcolorset[3] << "\n";
-					config << fovthick;
-					//config << item_current;  //what
-
+					config << thirdperson;
 					config.close();
 				}
 			}
@@ -354,17 +263,7 @@ void Overlay::RenderMenu()
 					config >> v.shieldbar;
 					config >> v.distance;
 					config >> thirdperson;
-					config >> fovcircle;
-					config >> fovsize;
-					config >> fovsize2;
-					config >> fovcolor1;
-					config >> fovcolor2;
-					config >> fovcolor3;
-					config >> fovcolorset[0];
-					config >> fovcolorset[1];
-					config >> fovcolorset[2];
-					config >> fovcolorset[3];
-					config >> fovthick;
+
 					//config >> item_current; // no idea how to imput a string of words 
 					
 

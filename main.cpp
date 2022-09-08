@@ -20,20 +20,16 @@ typedef struct player
 	//seer
 	int maxshield = 0;
 	int armortype = 0;
+	D3DXVECTOR3 EntityPosition;
+	D3DXVECTOR3 LocalPlayerPosition;
+	D3DXVECTOR3 localviewangle;
 	char name[33] = { 0 };
 }player;
 
 
 uint32_t check = 0xABCD;
 
-typedef struct radarplayer
-{
 
-	D3DXVECTOR3		EntityPosition;
-	D3DXVECTOR3		LocalPlayerPosition;
-	float		localyaw;
-
-}radarplayer;
 
 
 
@@ -71,21 +67,9 @@ float glowb = 120.0f;
 float glowcolor[3] = { 000.0f, 000.0f, 000.0f };
 int glowtype = 1;
 int glowtype2 = 2;
-//int xs = 960;
-//int yx = 540;
 
 
-//fov stuff
-float fovsize = max_fov * 8.4;
-float fovsize2 = max_fov * 10.7;
-int zoomf1 = 0;
-int zoomf2 = 0;
-bool fovcircle = true;
-float fovcolorset[4] = { 000.0f, 000.0f, 000.0f, 000.0f };
-float fovcolor1 = 50.0f;
-float fovcolor2 = 50.0f;
-float fovcolor3 = 50.0f;
-float fovthick;
+
 
 
 
@@ -101,7 +85,7 @@ bool shooting = false; //read
 bool valid = false; //write
 bool next2 = false; //read write
 
-uint64_t add[28];
+uint64_t add[27];
 
 bool k_f5 = 0;
 bool k_f6 = 0;
@@ -116,7 +100,6 @@ bool k_f100 = 0;
 
 
 
-//Fov Cirlce test
 
 
 
@@ -143,7 +126,8 @@ bool k_f100 = 0;
 
 
 
-/*//radar test
+
+//radar test
 
 #define M_PI		3.14159265358979323846	// matches value in gcc v2 math.h
 
@@ -222,7 +206,7 @@ namespace RadarSettings
 	int radartype = 0;
 	int width_Radar = 400;
 	int height_Radar = 400;
-	int distance_Radar = 400;
+	int distance_Radar = 200;
 };
 
 void DrawRadarPoint(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, float eneamyDist, int xAxis, int yAxis, int width, int height, D3DXCOLOR color)
@@ -238,8 +222,10 @@ void DrawRadarPoint(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlay
 
 	//FilledRectangle(pos.x, pos.y, siz.x, siz.y, { 255, 255, 255, 255 });
 
-	D3DXVECTOR3 single = RotatePoint(EneamyPos, LocalPos, pos.x, pos.y, siz.x, siz.y, LocalPlayerY, 2.f, &ck);
-	if (RadarSettings::Radar = true)
+	D3DXVECTOR3 single = RotatePoint(EneamyPos, LocalPos, pos.x, pos.y, siz.x, siz.y, LocalPlayerY, 0.5f, &ck);
+	memset(players, 0, sizeof(players));
+	for (int i = 0; i < 100; i++)
+	if (players[i].dist / 39.62 >= 0.f && players[i].dist / 39.62 < RadarSettings::distance_Radar)
 	{
 		//if (radartype == 0)
 		//	Drawing::DrawOutlinedText(font, std::to_string((int)eneamyDist), ImVec2(single.x, single.y), 11, { 255, 255, 255, 255 }, true);
@@ -291,7 +277,7 @@ void pkRadar(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, fl
 
 
 
-*/
+
 
 //random smoothing from 90 to 149 with 2-3 bone id
 void randomBone100() {
@@ -306,16 +292,6 @@ void randomBone100() {
 
 
 
-//random smoothing from 30 to 50 with 1-3 bone id
-//void randomBone20() {
-//	int bonearray[3] = { 1, 2, 3 };
-//	int randVal = rand() % 3;
-//	bone = bonearray[randVal];
-//	int smootharray[21]{ 30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50 };
-//	int randSmooth = rand() % 21;
-//	smooth = smootharray[randSmooth];
-//
-//}
 
 
 
@@ -326,36 +302,19 @@ bool IsKeyDown(int vk)
 
 player players[100];
 
-radarplayer radarplayers[100];
+
 
 
 void Overlay::RenderEsp()
 {
-	if (fovcircle && zoomf1 == 0)
-	{
 
 
-
-		//ImGui::Begin(XorStr("##esp"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus);
-		auto draw = ImGui::GetBackgroundDrawList();
-		draw->AddCircle(ImVec2(1920 / 2, 1080 / 2), fovsize, IM_COL32(fovcolor1, fovcolor2, fovcolor3, 255), 100, fovthick);
-		//ImGui::End();
-	}
-	else if (fovcircle && zoomf1 == 1)
-	{
-
-
-
-		//ImGui::Begin(XorStr("##esp"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus);
-		auto draw = ImGui::GetBackgroundDrawList();
-		draw->AddCircle(ImVec2(1920 / 2, 1080 / 2), fovsize2, IM_COL32(fovcolor1, fovcolor2, fovcolor3, 255), 100, fovthick);
-		//ImGui::End();
-	}
 	next2 = false;
 	if (g_Base != 0 && esp)
 	{
+		
 		memset(players, 0, sizeof(players));
-		memset(radarplayers, 0, sizeof(radarplayers));
+				
 		while (!next2 && esp)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -373,18 +332,20 @@ void Overlay::RenderEsp()
 			
 			for (int i = 0; i < 100; i++)
 			{
+				if (v.box)
+				{
+					if (RadarSettings::Radar == true)
+					{
+						pkRadar(players[i].EntityPosition, players[i].LocalPlayerPosition, players[i].localviewangle.y, players[i].dist / 39.62);
+					}
+				}
+
 				if (players[i].health > 0)
 				{
 					std::string distance = std::to_string(players[i].dist / 39.62);
 					distance = distance.substr(0, distance.find('.')) + "m(" + std::to_string(players[i].entity_team) + ")";
-					/*if (v.box)
-					{
-						if (RadarSettings::Radar == true)
-						{
-							pkRadar(radarplayers[i].EntityPosition, radarplayers[i].LocalPlayerPosition, radarplayers[i].localyaw, players[i].dist);
-						}
-					}
-					*/
+
+					
 
 
 					if (v.line)
@@ -394,7 +355,7 @@ void Overlay::RenderEsp()
 					{
 						if (players[i].knocked)
 							String(ImVec2(players[i].boxMiddle, (players[i].b_y + 1)), RED, distance.c_str());  //DISTANCEs			else
-						String(ImVec2(players[i].boxMiddle, (players[i].b_y + 1)), GREEN, distance.c_str());  //DISTANCE
+							String(ImVec2(players[i].boxMiddle, (players[i].b_y + 1)), GREEN, distance.c_str());  //DISTANCE
 					}
 
 					if (v.healthbar)
@@ -451,7 +412,7 @@ int main(int argc, char** argv)
 	add[23] = (uintptr_t)&firing_range;
 	add[24] = (uintptr_t)&glowtype;
 	add[25] = (uintptr_t)&glowtype2;
-	add[26] = (uintptr_t)&radarplayers[0];
+	
 	printf(XorStr("Game Version 3.0.11.32 |-| Radar Test Ver |-| Add me offset: 0x%I64x\n"), (uint64_t)&add[0] - (uint64_t)GetModuleHandle(NULL));
 
 	Overlay ov1 = Overlay();
@@ -511,20 +472,6 @@ int main(int argc, char** argv)
 				config >> v.shieldbar;
 				config >> v.distance;
 				config >> thirdperson;
-				config >> fovcircle;
-				config >> fovsize;
-				config >> fovsize2;
-				config >> fovcolor1;
-				config >> fovcolor2;
-				config >> fovcolor3;
-				config >> fovcolor1;
-				config >> fovcolor2;
-				config >> fovcolor3;
-				config >> fovcolorset[0];
-				config >> fovcolorset[1];
-				config >> fovcolorset[2];
-				config >> fovcolorset[3];
-				config >> fovthick;
 				//config >> item_current; // no idea how to imput a string of words 
 
 
@@ -600,7 +547,7 @@ int main(int argc, char** argv)
 		if (IsKeyDown(aim_key))
 		{
 			aiming = true;
-			zoomf1 = 1;
+
 		}
 
 		else if (IsKeyDown(aim_key2))
@@ -608,7 +555,7 @@ int main(int argc, char** argv)
 		else
 		{
 			aiming = false;
-			zoomf1 = 0;
+			
 		}
 		if (IsKeyDown(shoot_key))
 		{
