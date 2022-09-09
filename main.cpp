@@ -336,7 +336,7 @@ void Overlay::RenderEsp()
 						if (players[i].dist < 16000.0f)
 						{
 
-							DrawSeerLikeHealth((players[i].b_x - (players[i].width / 2.0f) + 5), (players[i].b_y - players[i].height - 30), players[i].shield, players[i].maxshield, players[i].armortype, players[i].health); //health bar					
+							DrawSeerLikeHealth((players[i].b_x - (players[i].width / 2.0f) + 5), (players[i].b_y - players[i].height - 10), players[i].shield, players[i].maxshield, players[i].armortype, players[i].health); //health bar					
 						}
 					//if(v.name)
 						//String(ImVec2(players[i].boxMiddle, (players[i].b_y - players[i].height - 15)), WHITE, players[i].name);
