@@ -53,19 +53,8 @@ public:
 	void RectFilled(float x0, float y0, float x1, float y1, ImColor color, float rounding, int rounding_corners_flags);
 	void ProgressBar(float x, float y, float w, float h, int value, int v_max);
 	void String(ImVec2 pos, ImColor color, const char* text);
-	
-	
-
 	//Seer
-
 	void DrawSeerLikeHealth(float x, float y, int shield, int max_shield, int armorType, int health);
-
-	//radar test
-	//void pkRadar(ImVec2 EneamyPos, ImVec2 LocalPos, float LocalPlayerY, float eneamyDist);
-
-
-
-
 private:
 	bool running;
 	HWND overlayHWND;

@@ -30,6 +30,7 @@ typedef struct player
 uint32_t check = 0xABCD;
 
 
+// Packs red, green, blue color components a 32-bit integer.
 
 
 
@@ -66,7 +67,13 @@ float glowb = 120.0f;
 float glowcolor[3] = { 000.0f, 000.0f, 000.0f };
 int glowtype = 1;
 int glowtype2 = 2;
+//radar color
 
+
+extern unsigned int radarcolorr;
+extern unsigned int radarcolorg;
+extern unsigned int radarcolorb;
+float radarcolor[3];
 
 
 
@@ -96,7 +103,6 @@ bool k_f10 = 0;
 bool k_f20 = 0;
 
 bool k_f100 = 0;
-
 
 
 
@@ -181,7 +187,7 @@ namespace RadarSettings
 	int radartype = 0;
 	int width_Radar = 400;
 	int height_Radar = 400;
-	int distance_Radar = 200;
+	int distance_Radar = 250;
 };
 
 void DrawRadarPoint(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, float eneamyDist, int xAxis, int yAxis, int width, int height, D3DXCOLOR color)
@@ -203,7 +209,7 @@ void DrawRadarPoint(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlay
 		//if (radartype == 0)
 		//	Drawing::DrawOutlinedText(font, std::to_string((int)eneamyDist), ImVec2(single.x, single.y), 11, { 255, 255, 255, 255 }, true);
 		//else
-		FilledRectangle(single.x, single.y, 5, 5, { 255, 255, 255, 255 });
+		FilledRectangle(single.x, single.y, 5, 5, { radarcolorr, radarcolorg, radarcolorb, 255 });
 
 	}
 }
@@ -216,7 +222,7 @@ void pkRadar(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, fl
 	style->WindowRounding = 0.2f;
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.13529413f, 0.14705884f, 0.15490198f, 0.82f));
 	ImGuiWindowFlags TargetFlags;
-	
+
 	TargetFlags = /*ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | */ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_::ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar;
 
 	if (!firstS)
@@ -314,8 +320,10 @@ void Overlay::RenderEsp()
 					distance = distance.substr(0, distance.find('.')) + "m(" + std::to_string(players[i].entity_team) + ")";
 
 					float radardistance = (int)((players[i].LocalPlayerPosition, players[i].dist) / 39.62);
+
 					if (v.box)
 					{
+
 						if (RadarSettings::Radar == true)
 						{
 							pkRadar(players[i].EntityPosition, players[i].LocalPlayerPosition, players[i].localviewangle.y, radardistance);
@@ -387,11 +395,11 @@ int main(int argc, char** argv)
 	add[24] = (uintptr_t)&glowtype;
 	add[25] = (uintptr_t)&glowtype2;
 	
-	printf(XorStr("Game Version 3.0.11.32 |-| Radar Test Ver |-| Add me offset: 0x%I64x\n"), (uint64_t)&add[0] - (uint64_t)GetModuleHandle(NULL));
+	printf(XorStr("Game Version 3.0.11.32 |-| Radar Ver With Color Test |-| Add me offset: 0x%I64x\n"), (uint64_t)&add[0] - (uint64_t)GetModuleHandle(NULL));
 
 	Overlay ov1 = Overlay();
 	ov1.Start();
-	printf(XorStr("Waiting for Zootopia 2 ....The Fox is Alive!\n"));
+	printf(XorStr("Waiting for The Ban .... Never Gonna Get it!\n"));
 	while (check == 0xABCD)
 	{
 		if (IsKeyDown(VK_F4))
@@ -442,6 +450,12 @@ int main(int argc, char** argv)
 				config >> glowcolor[0];
 				config >> glowcolor[1];
 				config >> glowcolor[2];
+				config >> radarcolorr;
+				config >> radarcolorg;
+				config >> radarcolorb;
+				config >> radarcolor[0];
+				config >> radarcolor[1];
+				config >> radarcolor[2];
 				config >> v.healthbar;
 				config >> v.shieldbar;
 				config >> v.distance;

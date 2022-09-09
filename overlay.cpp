@@ -4,10 +4,6 @@
 
 using namespace std;
 
-
-
-
-
 extern bool firing_range;
 extern int aim;
 extern bool esp;
@@ -32,12 +28,11 @@ extern int glowtype;
 extern int glowtype2;
 extern float glowcolor[3];
 
-
-
-
-const char* items[] = { "Default for RGB Colors", "BloodHound" };
-const char* item_current = "Default for RGB Colors";
-
+//radar color
+unsigned int radarcolorr = 0;
+unsigned int radarcolorg = 0;
+unsigned int radarcolorb = 0;
+extern float radarcolor[3];
 
 int width;
 int height;
@@ -45,12 +40,6 @@ bool k_leftclick = false;
 bool k_ins = false;
 bool show_menu = false;
 visuals v;
-
-
-//radar
-
-
-
 
 extern bool IsKeyDown(int vk);
 
@@ -107,11 +96,6 @@ bool CreateDeviceD3D(HWND hWnd);
 void CleanupDeviceD3D();
 void CreateRenderTarget();
 void CleanupRenderTarget();
-
-
-
-
-
 
 void Overlay::RenderMenu()
 {
@@ -198,6 +182,16 @@ void Overlay::RenderMenu()
 				glowg = glowcolor[1] * 250;
 				glowb = glowcolor[2] * 250;
 			}
+			ImGui::ColorEdit3("Radar Color Picker", radarcolor);
+			{
+				radarcolorr = radarcolor[0] * 250;
+				radarcolorg = radarcolor[1] * 250;
+				radarcolorb = radarcolor[2] * 250;
+			}
+
+
+			
+
 			if (ImGui::Button("Save Config"))
 			{
 				ofstream config("Config.txt");
@@ -224,6 +218,12 @@ void Overlay::RenderMenu()
 					config << glowcolor[0] << "\n";
 					config << glowcolor[1] << "\n";
 					config << glowcolor[2] << "\n";
+					config << radarcolorr << "\n";
+					config << radarcolorg << "\n";
+					config << radarcolorb << "\n";
+					config << radarcolor[0] << "\n";
+					config << radarcolor[1] << "\n";
+					config << radarcolor[2] << "\n";
 					config << v.healthbar << "\n";
 					config << v.shieldbar << "\n";
 					config << v.distance << "\n";
@@ -260,15 +260,17 @@ void Overlay::RenderMenu()
 					config >> glowcolor[0];
 					config >> glowcolor[1];
 					config >> glowcolor[2];
+					config >> radarcolorr;
+					config >> radarcolorg;
+					config >> radarcolorb;
+					config >> radarcolor[0];
+					config >> radarcolor[1];
+					config >> radarcolor[2];
 					config >> v.healthbar;
 					config >> v.shieldbar;
 					config >> v.distance;
 					config >> thirdperson;
 					config >> v.box;
-
-					//config >> item_current; // no idea how to imput a string of words 
-					
-
 					config.close();
 				}
 			}
@@ -280,8 +282,6 @@ void Overlay::RenderMenu()
 	ImGui::Text(XorStr("Overlay FPS: %.3f ms/frame (%.1f FPS)"), 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 }
-//Bone
-
 
 
 void Overlay::RenderInfo()
@@ -608,24 +608,6 @@ void DrawHexagonFilled(const ImVec2& p1, const ImVec2& p2, const ImVec2& p3, con
 {
 	ImGui::GetWindowDrawList()->AddHexagonFilled(p1, p2, p3, p4, p5, p6, col);
 }
-
-//radar test
-
-
-//radar test
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //Seer
 
