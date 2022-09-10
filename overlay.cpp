@@ -27,12 +27,20 @@ extern float glowb;
 extern int glowtype;
 extern int glowtype2;
 extern float glowcolor[3];
-
 //radar color
 unsigned int radarcolorr = 0;
 unsigned int radarcolorg = 0;
 unsigned int radarcolorb = 0;
 extern float radarcolor[3];
+//fov stuff
+extern bool fovcircle;
+extern float fovsize;
+extern float fovsize2;
+extern float fovcolorset[4];
+extern float fovcolor1;
+extern float fovcolor2;
+extern float fovcolor3;
+extern float fovthick;
 
 int width;
 int height;
@@ -167,6 +175,9 @@ void Overlay::RenderMenu()
 			ImGui::SliderFloat(XorStr("##2"), &smooth, 12.0f, 150.0f, "%.2f");
 			ImGui::Text(XorStr("Max FOV:"));
 			ImGui::SliderFloat(XorStr("##3"), &max_fov, 5.0f, 250.0f, "%.2f");
+			ImGui::Checkbox("Circle Fov", &fovcircle);
+			ImGui::SliderFloat("Circle size", &fovsize, 0, 1920, "%.3f size");
+			ImGui::SliderFloat("Circle size Zoomed in", &fovsize2, 0, 1920, "%.3f size");
 			ImGui::Text(XorStr("Aim at 0=Head, 1=Neck, 2=Chest, 3=Stomach"));
 			ImGui::SliderInt(XorStr("##4"), &bone, 0, 175);
 			ImGui::Checkbox(XorStr("Distance"), &v.distance);
@@ -176,22 +187,32 @@ void Overlay::RenderMenu()
 			ImGui::Checkbox(XorStr("Shield bar"), &v.shieldbar);
 			ImGui::Checkbox(XorStr("Radar"), &v.box);
 			ImGui::Text(XorStr("ESP options:"));
+			//Glow Color
 			ImGui::ColorEdit3("Glow Color Picker", glowcolor);
 			{
 				glowr = glowcolor[0] * 250;
 				glowg = glowcolor[1] * 250;
 				glowb = glowcolor[2] * 250;
 			}
+			//Radar Color
 			ImGui::ColorEdit3("Radar Color Picker", radarcolor);
 			{
 				radarcolorr = radarcolor[0] * 250;
 				radarcolorg = radarcolor[1] * 250;
 				radarcolorb = radarcolor[2] * 250;
 			}
+			ImGui::ColorEdit4("Fov Color Picker", fovcolorset);
+			{
+
+				fovcolor1 = fovcolorset[0] * 250;
+				fovcolor2 = fovcolorset[1] * 250;
+				fovcolor3 = fovcolorset[2] * 250;
+				fovthick = fovcolorset[3] * 250;
+			}
 
 
 			
-
+			//Saving
 			if (ImGui::Button("Save Config"))
 			{
 				ofstream config("Config.txt");
@@ -228,11 +249,23 @@ void Overlay::RenderMenu()
 					config << v.shieldbar << "\n";
 					config << v.distance << "\n";
 					config << thirdperson<< "\n";
-					config << v.box;
+					config << v.box << "\n";
+					config << fovcircle << "\n";
+					config << fovsize << "\n";
+					config << fovsize2 << "\n";
+					config << fovcolor1 << "\n";
+					config << fovcolor2 << "\n";
+					config << fovcolor3 << "\n";
+					config << fovcolorset[0] << "\n";
+					config << fovcolorset[1] << "\n";
+					config << fovcolorset[2] << "\n";
+					config << fovcolorset[3] << "\n";
+					config << fovthick;
 					config.close();
 				}
 			}
 			ImGui::SameLine();
+			//Loading
 			if (ImGui::Button("Load Config"))
 			{
 
@@ -271,6 +304,17 @@ void Overlay::RenderMenu()
 					config >> v.distance;
 					config >> thirdperson;
 					config >> v.box;
+					config >> fovcircle;
+					config >> fovsize;
+					config >> fovsize2;
+					config >> fovcolor1;
+					config >> fovcolor2;
+					config >> fovcolor3;
+					config >> fovcolorset[0];
+					config >> fovcolorset[1];
+					config >> fovcolorset[2];
+					config >> fovcolorset[3];
+					config >> fovthick;
 					config.close();
 				}
 			}
@@ -608,9 +652,6 @@ void DrawHexagonFilled(const ImVec2& p1, const ImVec2& p2, const ImVec2& p3, con
 {
 	ImGui::GetWindowDrawList()->AddHexagonFilled(p1, p2, p3, p4, p5, p6, col);
 }
-
-//Seer
-
 
 void Overlay::DrawSeerLikeHealth(float x, float y, int shield, int max_shield, int armorType, int health) {
 
