@@ -333,9 +333,9 @@ void Overlay::RenderInfo()
 
 	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(470, 25));
+	ImGui::SetNextWindowSize(ImVec2(150, 25));
 	ImGui::Begin(XorStr("##info"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
-	DrawLine(ImVec2(1, 5), ImVec2(400, 5), RED, 2);
+	DrawLine(ImVec2(1, 5), ImVec2(140, 5), RED, 2);
 	ImGui::TextColored(RED, "%d", spectators);
 	ImGui::SameLine();
 	ImGui::Text("--");
@@ -352,18 +352,6 @@ void Overlay::RenderInfo()
 	{
 		ImGui::TextColored(RED, "Aim Off %d", aim);
 	}
-	ImGui::SameLine();
-	ImGui::Text("--");
-	ImGui::SameLine();
-	ImGui::TextColored(GREEN, "Bone ID %d", bone);
-	ImGui::SameLine();
-	ImGui::Text("--");
-	ImGui::SameLine();
-	ImGui::TextColored(GREEN, "Smooth %.0f", smooth);
-	ImGui::SameLine();
-	ImGui::Text("--");
-	ImGui::SameLine();
-	ImGui::TextColored(GREEN, "Glow Type %d", glowtype);
 	ImGui::End();
 }
 
