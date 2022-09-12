@@ -32,6 +32,8 @@ unsigned int radarcolorr = 0;
 unsigned int radarcolorg = 0;
 unsigned int radarcolorb = 0;
 extern float radarcolor[3];
+//Big Radar 
+
 //fov stuff
 extern bool fovcircle;
 extern float fovsize;
@@ -186,6 +188,7 @@ void Overlay::RenderMenu()
 			ImGui::SameLine();
 			ImGui::Checkbox(XorStr("Shield bar"), &v.shieldbar);
 			ImGui::Checkbox(XorStr("Radar"), &v.box);
+			
 			ImGui::Text(XorStr("ESP options:"));
 			//Glow Color
 			ImGui::ColorEdit3("Glow Color Picker", glowcolor);

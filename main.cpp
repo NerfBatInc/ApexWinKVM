@@ -63,6 +63,14 @@ extern unsigned int radarcolorr;
 extern unsigned int radarcolorg;
 extern unsigned int radarcolorb;
 float radarcolor[3];
+//Bigger Radar
+float circradarsize100 = 59.0f;
+float circradarsize200 = 118.0f;
+float circradarsize300 = 177.0f;
+float circradarsize400 = 236.0f;
+float circradarsize500 = 295.0f;
+bool biggerradartoggle = 0;
+bool bigradar = false;
 
 bool thirdperson = false;
 int spectators = 0; //write
@@ -95,6 +103,7 @@ bool k_f7 = 0;
 bool k_f8 = 0;
 bool k_f9 = 0;
 bool k_f10 = 0;
+
 
 bool k_f20 = 0;
 
@@ -173,6 +182,7 @@ namespace RadarSettings
 	int width_Radar = 400;
 	int height_Radar = 400;
 	int distance_Radar = 250;
+	int distance_Radar2 = 1000;
 };
 
 void DrawRadarPoint(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, float eneamyDist, int xAxis, int yAxis, int width, int height, D3DXCOLOR color)
@@ -188,6 +198,25 @@ void DrawRadarPoint(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlay
 
 	D3DXVECTOR3 single = RotatePoint(EneamyPos, LocalPos, pos.x, pos.y, siz.x, siz.y, LocalPlayerY, 0.3f, &ck);
 	if (eneamyDist >= 0.f && eneamyDist < RadarSettings::distance_Radar)
+	{
+		FilledRectangle(single.x, single.y, 5, 5, { radarcolorr, radarcolorg, radarcolorb, 255 });
+	}
+}
+
+//Bigger Radar
+void DrawRadarPoint2(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, float eneamyDist, int xAxis, int yAxis, int width, int height, D3DXCOLOR color)
+{
+	bool out = false;
+	D3DXVECTOR3 siz;
+	siz.x = width;
+	siz.y = height;
+	D3DXVECTOR3 pos;
+	pos.x = xAxis;
+	pos.y = yAxis;
+	bool ck = false;
+
+	D3DXVECTOR3 single = RotatePoint(EneamyPos, LocalPos, pos.x, pos.y, siz.x, siz.y, LocalPlayerY, 0.3f, &ck);
+	if (eneamyDist >= 0.f && eneamyDist < RadarSettings::distance_Radar2)
 	{
 		FilledRectangle(single.x, single.y, 5, 5, { radarcolorr, radarcolorg, radarcolorb, 255 });
 	}
@@ -231,6 +260,48 @@ void pkRadar(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, fl
 	ImGui::PopStyleColor();
 }
 
+//Bigger Radar
+void pkRadar2(D3DXVECTOR3 EneamyPos, D3DXVECTOR3 LocalPos, float LocalPlayerY, float eneamyDist)
+{
+	ImGuiStyle* style = &ImGui::GetStyle();
+	style->WindowRounding = 0.2f;
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.13529413f, 0.14705884f, 0.15490198f, 0.82f));
+	ImGuiWindowFlags TargetFlags;
+	//Radar Window Flags: No Move, Resize, Title bar, Background etc. makes it so you can change it once set.
+
+	//slash out  | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove
+	TargetFlags = ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar/* | ImGuiWindowFlags_::ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoMove*/;
+
+	if (!firstS)
+	{
+		ImGui::SetNextWindowPos(ImVec2{ 1200, 60 }, ImGuiCond_Once);
+		firstS = true;
+	}
+	if (RadarSettings::Radar == true)
+	{
+		ImGui::SetNextWindowSize({ 500, 500 });
+		ImGui::Begin(("Bigger Radar"), 0, TargetFlags);
+		//if (ImGui::Begin(xorstr("Radar", 0, ImVec2(200, 200), -1.f, TargetFlags))) {
+		{
+			ImDrawList* Draw = ImGui::GetWindowDrawList();
+			ImVec2 DrawPos = ImGui::GetCursorScreenPos();
+			ImVec2 DrawSize = ImGui::GetContentRegionAvail();
+			ImVec2 midRadar = ImVec2(DrawPos.x + (DrawSize.x / 2), DrawPos.y + (DrawSize.y / 2));
+
+			//unslash to set to minimap, it helps line it up
+			ImGui::GetWindowDrawList()->AddCircle(ImVec2(DrawPos.x + DrawSize.x / 2, DrawPos.y + DrawSize.y / 2), circradarsize100, IM_COL32(255, 255, 255, 255));
+			ImGui::GetWindowDrawList()->AddCircle(ImVec2(DrawPos.x + DrawSize.x / 2, DrawPos.y + DrawSize.y / 2), circradarsize200, IM_COL32(255, 255, 255, 255));
+			ImGui::GetWindowDrawList()->AddCircle(ImVec2(DrawPos.x + DrawSize.x / 2, DrawPos.y + DrawSize.y / 2), circradarsize300, IM_COL32(255, 255, 255, 255));
+			ImGui::GetWindowDrawList()->AddCircle(ImVec2(DrawPos.x + DrawSize.x / 2, DrawPos.y + DrawSize.y / 2), circradarsize400, IM_COL32(255, 255, 255, 255));
+			ImGui::GetWindowDrawList()->AddCircle(ImVec2(DrawPos.x + DrawSize.x / 2, DrawPos.y + DrawSize.y / 2), circradarsize500, IM_COL32(255, 255, 255, 255));
+			//ImGui::GetWindowDrawList()->AddLine(ImVec2(midRadar.x, midRadar.y - DrawSize.y / 2.f), ImVec2(midRadar.x, midRadar.y + DrawSize.y / 2.f), IM_COL32(255, 255, 255, 255));
+
+			DrawRadarPoint2(EneamyPos, LocalPos, LocalPlayerY, eneamyDist, DrawPos.x, DrawPos.y, DrawSize.x, DrawSize.y, { 255, 255, 255, 255 });
+		}
+		ImGui::End();
+	}
+	ImGui::PopStyleColor();
+}
 
 bool IsKeyDown(int vk)
 {
@@ -289,6 +360,10 @@ void Overlay::RenderEsp()
 					if (v.box)
 					{
 							pkRadar(players[i].EntityPosition, players[i].LocalPlayerPosition, players[i].localviewangle.y, radardistance);
+					}
+					if (bigradar)
+					{
+						pkRadar2(players[i].EntityPosition, players[i].LocalPlayerPosition, players[i].localviewangle.y, radardistance);
 					}
 
 					if (v.line)
@@ -491,6 +566,27 @@ int main(int argc, char** argv)
 			bone = 1;
 			smooth = 100;
 
+		}
+
+		//Main Map Radar
+		if (IsKeyDown(0x54) && biggerradartoggle == 0)
+		{
+			biggerradartoggle = 1;
+			switch (bigradar)
+			{
+			case 0:
+				bigradar = true;
+				break;
+			case 1:
+				bigradar = false;
+				break;
+			default:
+				break;
+			}
+		}
+		else if (!IsKeyDown(0x54) && biggerradartoggle == 1)
+		{
+			biggerradartoggle = 0;
 		}
 
 		if (IsKeyDown(aim_key))
