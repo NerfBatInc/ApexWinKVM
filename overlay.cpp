@@ -135,20 +135,16 @@ void Overlay::RenderMenu()
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(450, 860), ImGuiCond_Once);
 	ImGui::Begin(XorStr("##title"), (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
-	if (ImGui::BeginTabBar(XorStr("Tab")))
-	{
-		if (ImGui::BeginTabItem(XorStr("Main")))
-		{
-			ImGui::Checkbox(XorStr("ESP"), &esp);
+	ImGui::Sliderbox(XorStr("ESP Toggle"), &esp);
 
-			ImGui::Checkbox(XorStr("AIM"), &aim_enable);
+	ImGui::Sliderbox(XorStr("AIM Toggle"), &aim_enable);
 
 			if (aim_enable)
 			{
 				ImGui::SameLine();
-				ImGui::Checkbox(XorStr("Visibility check"), &vis_check);
+				ImGui::Sliderbox(XorStr("Visibility Check"), &vis_check);
 				ImGui::SameLine();
-				ImGui::Checkbox(XorStr("No recoil/sway"), &aim_no_recoil);
+				ImGui::Sliderbox(XorStr("No Recoil/Sway"), &aim_no_recoil);
 				if (vis_check)
 				{
 					aim = 2;
@@ -163,48 +159,52 @@ void Overlay::RenderMenu()
 				aim = 0;
 			}
 
-			ImGui::Checkbox(XorStr("Glow items"), &item_glow);
+			ImGui::Sliderbox(XorStr("Glow Items"), &item_glow);
 			ImGui::SameLine();
-			ImGui::Checkbox(XorStr("Glow players"), &player_glow);
-			ImGui::Checkbox(XorStr("Thirdperson"), &thirdperson);
-			ImGui::Checkbox(XorStr("Charge rifle hack"), &chargerifle);
-			ImGui::Checkbox(XorStr("Firing Range Toggle"), &firing_range);
+			ImGui::Sliderbox(XorStr("Glow Players"), &player_glow);
+			ImGui::Sliderbox(XorStr("Thirdperson"), &thirdperson);
+			ImGui::Sliderbox(XorStr("Charge Rifle Hack"), &chargerifle);
+			ImGui::Sliderbox(XorStr("Firing Range Toggle"), &firing_range);
+			ImGui::Sliderbox(XorStr("Radar"), &v.box);
+			ImGui::Sliderbox("Circle Fov", &fovcircle);
 			ImGui::Text(XorStr("Max distance:"));
 			ImGui::SliderFloat(XorStr("##1"), &max_dist, 100.0f * 40, 800.0f * 40, "%.2f");
 			ImGui::SameLine();
 			ImGui::Text("(%d meters)", (int)(max_dist / 40));
-			ImGui::Text(XorStr("Smooth aim value:"));
-			ImGui::SliderFloat(XorStr("##2"), &smooth, 12.0f, 150.0f, "%.2f");
+			ImGui::Text(XorStr("Smooth Aim Value:"));
+			ImGui::SliderFloat(XorStr("##2"), &smooth, 85.0f, 150.0f, "%.2f");
+			ImGui::SameLine();
+			ImGui::Text(XorStr("85 To 100 Is Safe"));
 			ImGui::Text(XorStr("Max FOV:"));
-			ImGui::SliderFloat(XorStr("##3"), &max_fov, 5.0f, 250.0f, "%.2f");
-			ImGui::Checkbox("Circle Fov", &fovcircle);
-			ImGui::SliderFloat("Circle size", &fovsize, 0, 1920, "%.3f size");
-			ImGui::SliderFloat("Circle size Zoomed in", &fovsize2, 0, 1920, "%.3f size");
-			ImGui::Text(XorStr("Aim at 0=Head, 1=Neck, 2=Chest, 3=Stomach"));
-			ImGui::SliderInt(XorStr("##4"), &bone, 0, 175);
-			ImGui::Checkbox(XorStr("Distance"), &v.distance);
-			ImGui::SameLine();
-			ImGui::Checkbox(XorStr("Health bar"), &v.healthbar);
-			ImGui::SameLine();
-			ImGui::Checkbox(XorStr("Shield bar"), &v.shieldbar);
-			ImGui::Checkbox(XorStr("Radar"), &v.box);
-			
+			ImGui::SliderFloat(XorStr("##3"), &max_fov, 1.0f, 50.0f, "%.2f");
+			ImGui::Text(XorStr("Aiming Bone:"));
+			ImGui::Text(XorStr("0=Head, 1=Neck, 2=Chest, 3=Stomach"));
+			ImGui::SliderInt(XorStr("##bone slider"), &bone, 0, 3);
 			ImGui::Text(XorStr("ESP options:"));
+			ImGui::Sliderbox(XorStr("Distance"), &v.distance);
+			ImGui::SameLine();
+			ImGui::Sliderbox(XorStr("Health bar"), &v.healthbar);
+			ImGui::SameLine();
+			ImGui::Sliderbox(XorStr("Shield bar"), &v.shieldbar);
 			//Glow Color
-			ImGui::ColorEdit3("Glow Color Picker", glowcolor);
+			ImGui::Text(XorStr("Glow Color Picker:"));
+			ImGui::ColorEdit3("##Glow Color Picker", glowcolor);
 			{
 				glowr = glowcolor[0] * 250;
 				glowg = glowcolor[1] * 250;
 				glowb = glowcolor[2] * 250;
 			}
 			//Radar Color
-			ImGui::ColorEdit3("Radar Color Picker", radarcolor);
+			ImGui::Text(XorStr("Radar Color Picker:"));
+			ImGui::ColorEdit3("##Radar Color Picker", radarcolor);
 			{
 				radarcolorr = radarcolor[0] * 250;
 				radarcolorg = radarcolor[1] * 250;
 				radarcolorb = radarcolor[2] * 250;
 			}
-			ImGui::ColorEdit4("Fov Color Picker", fovcolorset);
+			//Fov Circle Color
+			ImGui::Text(XorStr("Fov Circle Color Picker:"));
+			ImGui::ColorEdit4("##Fov Circle Color Picker", fovcolorset);
 			{
 
 				fovcolor1 = fovcolorset[0] * 250;
@@ -213,7 +213,7 @@ void Overlay::RenderMenu()
 				fovthick = fovcolorset[3] * 250;
 			}
 
-
+			ImGui::Text(XorStr("Saving and Loading:"));
 			
 			//Saving
 			if (ImGui::Button("Save Config"))
@@ -321,11 +321,10 @@ void Overlay::RenderMenu()
 					config.close();
 				}
 			}
-			ImGui::EndTabItem();
-		}
 		
-		ImGui::EndTabBar();
-	}
+		
+		
+	
 	ImGui::Text(XorStr("Overlay FPS: %.3f ms/frame (%.1f FPS)"), 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 }

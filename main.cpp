@@ -495,9 +495,6 @@ int main(int argc, char** argv)
 				config >> fovcolor1;
 				config >> fovcolor2;
 				config >> fovcolor3;
-				config >> fovcolor1;
-				config >> fovcolor2;
-				config >> fovcolor3;
 				config >> fovcolorset[0];
 				config >> fovcolorset[1];
 				config >> fovcolorset[2];
