@@ -59,6 +59,7 @@ float glowcolor[3] = { 000.0f, 000.0f, 000.0f };
 int glowtype = 1;
 int glowtype2 = 2;
 //radar color
+bool minimapradar = false;
 extern unsigned int radarcolorr;
 extern unsigned int radarcolorg;
 extern unsigned int radarcolorb;
@@ -69,8 +70,11 @@ float circradarsize200 = 118.0f;
 float circradarsize300 = 177.0f;
 float circradarsize400 = 236.0f;
 float circradarsize500 = 295.0f;
-bool biggerradartoggle = 0;
-bool bigradar = false;
+bool mainradartoggle = 0;
+bool mainradarmap = false;
+//Fill Map
+bool stormmap = true;
+bool worldsedge = true;
 
 bool thirdperson = false;
 int spectators = 0; //write
@@ -310,6 +314,124 @@ bool IsKeyDown(int vk)
 
 player players[100];
 
+
+//Full map radar test
+//ImVec2 can be replaced with Vector2D
+class world {
+public:
+	ImVec2 w1; //origin of point 1
+	ImVec2 w2; //origin of point 2
+	ImVec2 s1; //screen coord of point 1
+	ImVec2 s2; //screen coord of point 2
+	float ratioX;
+	float ratioY;
+	world(ImVec2 w1, ImVec2 s1, ImVec2 w2, ImVec2 s2) {
+		this->w1 = w1;
+		this->w2 = w2;
+		this->s1 = s1;
+		this->s2 = s2;
+		this->ratioX = (s2.x - s1.x) / (w2.x - w1.x);
+		this->ratioY = (s1.y - s2.y) / (w2.y - w1.y);
+	}
+};
+//These values only work with 1920x1080 fullscreen
+//Battel Royal
+world KingsCanyon(ImVec2(0, 0), ImVec2(0, 0), ImVec2(0, 0), ImVec2(0, 0)); //to be measured
+world WorldsEdge(ImVec2(-9190.608398, 8443.554688), ImVec2(824, 412), ImVec2(-19529.794922, -8933.173828), ImVec2(707, 608));
+world Olympus(ImVec2(0, 0), ImVec2(0, 0), ImVec2(0, 0), ImVec2(0, 0)); //to be measured
+world StormPoint(ImVec2(-21264.427734, -47086.878906), ImVec2(711, 983), ImVec2(40298.070313, 21163.728516), ImVec2(1321, 306));
+
+//Arena
+world Overflow(ImVec2(-3344.994629, -4018.093018), ImVec2(552, 431), ImVec2(5039.592773, -4639.289063), ImVec2(1322, 489));
+world DropOff(ImVec2(3135.113281, 1654.107666), ImVec2(1151, 603), ImVec2(-2920.918701, 811.240479), ImVec2(722, 663));
+world Habitat4(ImVec2(4482.470215, -604.362854), ImVec2(1205, 544), ImVec2(-4464.019043, 593.067688), ImVec2(650, 470));
+world Encore(ImVec2(4144.926270, 468.957611), ImVec2(1184, 472), ImVec2(-3791.070313, 3.092307), ImVec2(692, 501));
+world PartyCrasher(ImVec2(-3275.972900, 3646.970703), ImVec2(589, 197), ImVec2(1085.708740, -3869.658936), ImVec2(1022, 943));
+
+ImVec2 worldToScreenMap(D3DXVECTOR3 origin) {
+		float ratioX;
+		float ratioY;
+		ImVec2 w1;
+		ImVec2 s1;
+		/*
+		if (stormmap == true) { //Storm Point
+			ratioX = StormPoint.ratioX;
+			ratioY = StormPoint.ratioY;
+			w1 = StormPoint.w1;
+			s1 = StormPoint.s1;
+		}
+		else if (strncmp(mapname, "mp_rr_aqueduct", 14) == 0) { //arena Overflow
+			ratioX = Overflow.ratioX;
+			ratioY = Overflow.ratioY;
+			w1 = Overflow.w1;
+			s1 = Overflow.s1;
+		}
+		else if (strncmp(mapname, "mp_rr_arena_composite", 21) == 0) { //arena DropOff
+			ratioX = DropOff.ratioX;
+			ratioY = DropOff.ratioY;
+			w1 = DropOff.w1;
+			s1 = DropOff.s1;
+		}
+		else if (strncmp(mapname, "mp_rr_arena_habitat", 19) == 0) { //arena Habitat4
+			ratioX = Habitat4.ratioX;
+			ratioY = Habitat4.ratioY;
+			w1 = Habitat4.w1;
+			s1 = Habitat4.s1;
+		}
+		else if (strncmp(mapname, "mp_rr_arena_skygarden", 21) == 0) { //arena Encore
+			ratioX = Encore.ratioX;
+			ratioY = Encore.ratioY;
+			w1 = Encore.w1;
+			s1 = Encore.s1;
+		}
+		else if (strncmp(mapname, "mp_rr_party_crasher", 19) == 0) { //arena PartyCrasher
+			ratioX = PartyCrasher.ratioX;
+			ratioY = PartyCrasher.ratioY;
+			w1 = PartyCrasher.w1;
+			s1 = PartyCrasher.s1;
+		}
+		else if (strncmp(mapname, "mp_rr_canyonlands_mu", 20) == 0) { //KingsCanyon
+			ratioX = KingsCanyon.ratioX;
+			ratioY = KingsCanyon.ratioY;
+			w1 = KingsCanyon.w1;
+			s1 = KingsCanyon.s1;
+		}*/
+		if (worldsedge == true) { //WorldsEdge
+			ratioX = WorldsEdge.ratioX;
+			ratioY = WorldsEdge.ratioY;
+			w1 = WorldsEdge.w1;
+			s1 = WorldsEdge.s1;
+		}/*
+		else if (strncmp(mapname, "mp_rr_olympus", 13) == 0) { //Olympus
+			ratioX = Olympus.ratioX;
+			ratioY = Olympus.ratioY;
+			w1 = Olympus.w1;
+			s1 = Olympus.s1;
+		}*/
+		else {
+			return ImVec2(0, 0);
+		}
+
+		//difference from location 1
+		float world_diff_x = origin.x - w1.x;
+		float world_diff_y = origin.y - w1.y;
+
+		//get the screen offsets by applying the ratio
+		float scr_diff_x = world_diff_x * ratioX;
+		float scr_diff_y = world_diff_y * ratioY;
+
+		//for x, add the offset to the screen x of location 1
+		//for y, subtract the offset from the screen y of location 1 (cuz Y is from bottom to up in Apex but it's from up to bottom in screen)
+		float pos_x = s1.x + scr_diff_x;
+		float pos_y = s1.y - scr_diff_y;
+
+		FilledRectangle(pos_x, pos_y, 5, 5, { radarcolorr, radarcolorg, radarcolorb, 255 });
+		
+	
+}
+
+
+
 void Overlay::RenderEsp()
 {
 	if (fovcircle && zoomf1 == 0)
@@ -357,14 +479,15 @@ void Overlay::RenderEsp()
 
 					float radardistance = (int)((players[i].LocalPlayerPosition, players[i].dist) / 39.62);
 					//Radar still using v.box i know....
-					if (v.box)
+					if (minimapradar == true)
 					{
 							pkRadar(players[i].EntityPosition, players[i].LocalPlayerPosition, players[i].localviewangle.y, radardistance);
 					}
-					if (bigradar)
+					/*if (bigradar)
 					{
 						pkRadar2(players[i].EntityPosition, players[i].LocalPlayerPosition, players[i].localviewangle.y, radardistance);
 					}
+					*/
 
 					if (v.line)
 						DrawLine(ImVec2((float)(getWidth() / 2), (float)getHeight()), ImVec2(players[i].b_x, players[i].b_y), BLUE, 1); //LINE FROM MIDDLE SCREEN
@@ -383,7 +506,10 @@ void Overlay::RenderEsp()
 							DrawSeerLikeHealth((players[i].b_x - (players[i].width / 2.0f) + 5), (players[i].b_y - players[i].height - 10), players[i].shield, players[i].maxshield, players[i].armortype, players[i].health); //health bar					
 						}
 					//Removed name
-					//if(v.name)
+					if (mainradarmap == true)
+
+						worldToScreenMap(players[i].EntityPosition);
+
 						//String(ImVec2(players[i].boxMiddle, (players[i].b_y - players[i].height - 15)), WHITE, players[i].name);
 
 
@@ -488,7 +614,7 @@ int main(int argc, char** argv)
 				config >> v.shieldbar;
 				config >> v.distance;
 				config >> thirdperson;
-				config >> v.box;
+				config >> minimapradar;
 				config >> fovcircle;
 				config >> fovsize;
 				config >> fovsize2;
@@ -566,24 +692,26 @@ int main(int argc, char** argv)
 		}
 
 		//Main Map Radar
-		if (IsKeyDown(0x54) && biggerradartoggle == 0)
+		if (IsKeyDown(0x4D) && mainradartoggle == 0)
 		{
-			biggerradartoggle = 1;
-			switch (bigradar)
+			mainradartoggle = 1;
+			switch (mainradarmap)
 			{
 			case 0:
-				bigradar = true;
+				mainradarmap = true;
+				minimapradar = false;
 				break;
 			case 1:
-				bigradar = false;
+				mainradarmap = false;
+				minimapradar = true;
 				break;
 			default:
 				break;
 			}
 		}
-		else if (!IsKeyDown(0x54) && biggerradartoggle == 1)
+		else if (!IsKeyDown(0x4D) && mainradartoggle == 1)
 		{
-			biggerradartoggle = 0;
+			mainradartoggle = 0;
 		}
 
 		if (IsKeyDown(aim_key))

@@ -28,11 +28,13 @@ extern int glowtype;
 extern int glowtype2;
 extern float glowcolor[3];
 //radar color
+extern bool minimapradar;
 unsigned int radarcolorr = 0;
 unsigned int radarcolorg = 0;
 unsigned int radarcolorb = 0;
 extern float radarcolor[3];
-//Big Radar 
+//Main Map Radar
+extern bool mainradarmap;
 
 //fov stuff
 extern bool fovcircle;
@@ -165,7 +167,8 @@ void Overlay::RenderMenu()
 			ImGui::Sliderbox(XorStr("Thirdperson"), &thirdperson);
 			ImGui::Sliderbox(XorStr("Charge Rifle Hack"), &chargerifle);
 			ImGui::Sliderbox(XorStr("Firing Range Toggle"), &firing_range);
-			ImGui::Sliderbox(XorStr("Radar"), &v.box);
+			ImGui::Sliderbox(XorStr("Radar"), &minimapradar);
+			ImGui::Sliderbox("Main Map Toggle Test", &mainradarmap);
 			ImGui::Sliderbox("Circle Fov", &fovcircle);
 			ImGui::Text(XorStr("Max distance:"));
 			ImGui::SliderFloat(XorStr("##1"), &max_dist, 100.0f * 40, 800.0f * 40, "%.2f");
@@ -252,7 +255,7 @@ void Overlay::RenderMenu()
 					config << v.shieldbar << "\n";
 					config << v.distance << "\n";
 					config << thirdperson<< "\n";
-					config << v.box << "\n";
+					config << std::boolalpha << minimapradar << "\n";
 					config << fovcircle << "\n";
 					config << fovsize << "\n";
 					config << fovsize2 << "\n";
@@ -306,7 +309,7 @@ void Overlay::RenderMenu()
 					config >> v.shieldbar;
 					config >> v.distance;
 					config >> thirdperson;
-					config >> v.box;
+					config >> minimapradar;
 					config >> fovcircle;
 					config >> fovsize;
 					config >> fovsize2;
